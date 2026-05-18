@@ -7,19 +7,22 @@ import Portfolio from "@/components/Portfolio";
 import Testimonials from "@/components/Testimonials";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
+import { readContent } from "@/lib/content";
 
-export default function Home() {
+export default async function Home() {
+  const content = await readContent();
+
   return (
     <main className="overflow-x-hidden">
-      <Navbar />
-      <Hero />
-      <Clients />
-      <Services />
-      <Stats />
-      <Portfolio />
-      <Testimonials />
-      <Contact />
-      <Footer />
+      <Navbar    data={content.navbar} />
+      <Hero      data={content.hero} />
+      <Clients   data={content.clients} />
+      <Services  data={content.services} />
+      <Stats     data={content.stats} />
+      <Portfolio data={content.portfolio} />
+      <Testimonials data={content.testimonials} />
+      <Contact   data={content.contact} />
+      <Footer    data={content.footer} />
     </main>
   );
 }

@@ -2,8 +2,9 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import type { ClientsContent } from "@/lib/content";
 
-const clients = [
+const defaultClients = [
   { name: "Alui Holística",        src: "/clientes/ALUI-HOLISTICA.png" },
   { name: "Bolis Purileo",         src: "/clientes/Bolis_Purileo.png" },
   { name: "Dental White",          src: "/clientes/dentalwhite.png" },
@@ -13,8 +14,11 @@ const clients = [
   { name: "SH Curly Store",        src: "/clientes/SH curly store.png" },
   { name: "TeraFitness",           src: "/clientes/TeraFitness_fisoteraipai.png" },
 ];
+const defaultLabel = "Empresas que confían en nosotros";
 
-export default function Clients() {
+export default function Clients({ data }: { data?: ClientsContent }) {
+  const clients = data?.items ?? defaultClients;
+  const sectionLabel = data?.label ?? defaultLabel;
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
 
@@ -55,7 +59,7 @@ export default function Clients() {
               textTransform: "uppercase",
             }}
           >
-            Empresas que confían en nosotros
+            {sectionLabel}
           </span>
           <div className="h-px flex-1 max-w-24" style={{ backgroundColor: "var(--color-border)" }} />
         </div>

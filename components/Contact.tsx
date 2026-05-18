@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState, FormEvent } from "react";
+import type { ContactContent } from "@/lib/content";
 
 type FormStatus = "idle" | "sending" | "success" | "error";
 
@@ -201,7 +202,18 @@ const inputErrorStyle: React.CSSProperties = {
   borderColor: "#B71C1C",
 };
 
-export default function Contact() {
+export default function Contact({ data }: { data?: ContactContent }) {
+  const sectionLabel = data?.sectionLabel ?? "Contáctanos";
+  const heading = data?.heading ?? "¿Listo para crecer?";
+  const subtext = data?.subtext ?? "Cuéntanos sobre tu proyecto y te responderemos en un día hábil.";
+  const contactEmail = data?.email ?? "contacto@rectrackmarketingdigital.com";
+  const contactPhone = data?.phone ?? "+52 (33) 3615-4478";
+  const contactLocation = data?.location ?? "Guadalajara, Jalisco, México";
+  const liveContactDetails = [
+    { ...contactDetails[0], value: contactEmail },
+    { ...contactDetails[1], value: contactPhone },
+    { ...contactDetails[2], value: contactLocation },
+  ];
   const { ref, visible } = useScrollReveal();
   const [fields, setFields] = useState<FormFields>({
     name: "",
@@ -293,7 +305,7 @@ export default function Contact() {
                 letterSpacing: "0.15em",
               }}
             >
-              Contáctanos
+              {sectionLabel}
             </span>
           </div>
 
@@ -308,8 +320,7 @@ export default function Contact() {
               letterSpacing: "-0.03em",
             }}
           >
-            ¿Listo para{" "}
-            <span style={{ color: "#B71C1C" }}>crecer?</span>
+            {heading.split('crecer').length > 1 ? <>{heading.split('crecer')[0]}<span style={{ color: "#B71C1C" }}>crecer?</span></> : heading}
           </h2>
 
           <p
@@ -322,9 +333,7 @@ export default function Contact() {
               lineHeight: 1.75,
             }}
           >
-            Cuéntanos sobre tu proyecto y te responderemos en un día hábil.
-            Sin rodeos, sin presión — solo una conversación real sobre lo que
-            necesitas.
+            {subtext}
           </p>
         </div>
 
@@ -812,7 +821,7 @@ export default function Contact() {
                 Detalles de Contacto
               </h3>
               <div className="flex flex-col gap-5">
-                {contactDetails.map((item) => (
+                {liveContactDetails.map((item) => (
                   <div key={item.label} className="flex items-start gap-3">
                     <div
                       className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5"

@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import type { FooterContent } from "@/lib/content";
 
 const navLinks = [
   { label: "Servicios",      href: "#services" },
@@ -80,8 +81,18 @@ function handleScrollTo(href: string) {
   if (el) el.scrollIntoView({ behavior: "smooth" });
 }
 
-export default function Footer() {
+export default function Footer({ data }: { data?: FooterContent }) {
   const year = new Date().getFullYear();
+  const tagline = data?.tagline ?? "Impulsando marcas que generan cambios.";
+  const footerEmail = data?.email ?? "contacto@rectrackmarketingdigital.com";
+  const footerPhone = data?.phone ?? "+52 (33) 3615-4478";
+  const footerWhatsapp = data?.whatsappNumber ?? "523336154478";
+  const footerLocation = data?.location ?? "Guadalajara, Jalisco, México";
+  const liveSocialLinks = socialLinks.map((s) => ({
+    ...s,
+    href: data?.social ? (s.label === "Facebook" ? data.social.facebook : s.label === "TikTok" ? data.social.tiktok : data.social.instagram) : s.href,
+  }));
+  const liveLegalLinks = data?.legalLinks ?? legalLinks;
 
   return (
     <footer className="" role="contentinfo" style={{ backgroundColor: "var(--color-bg)" }}>
@@ -121,12 +132,12 @@ export default function Footer() {
                 fontStyle: "italic",
               }}
             >
-              Impulsando marcas que generan cambios.
+              {tagline}
             </p>
 
             {/* Social icons */}
             <div className="flex items-center gap-3" role="list" aria-label="Social media links">
-              {socialLinks.map((social) => (
+              {liveSocialLinks.map((social) => (
                 <a
                   key={social.label}
                   href={social.href}
@@ -239,7 +250,7 @@ export default function Footer() {
             <ul className="flex flex-col gap-3" role="list">
               <li>
                 <a
-                  href="mailto:contacto@rectrackmarketingdigital.com"
+                  href={`mailto:${footerEmail}`}
                   className="text-sm transition-colors duration-300 hover:text-brand-primary"
                   style={{
                     fontFamily: "var(--font-body)",
@@ -248,12 +259,12 @@ export default function Footer() {
                     fontSize: "0.9rem",
                   }}
                 >
-                  contacto@rectrackmarketingdigital.com
+                  {footerEmail}
                 </a>
               </li>
               <li>
                 <a
-                  href="tel:+523336154478"
+                  href={`tel:+${footerPhone.replace(/\D/g, "")}`}
                   className="text-sm transition-colors duration-300 hover:text-brand-primary"
                   style={{
                     fontFamily: "var(--font-body)",
@@ -262,12 +273,12 @@ export default function Footer() {
                     fontSize: "0.9rem",
                   }}
                 >
-                  +52 (33) 3615-4478
+                  {footerPhone}
                 </a>
               </li>
               <li>
                 <a
-                  href="https://wa.me/523336154478?text=Hola%2C%20me%20interesa%20cotizar%20un%20proyecto%20con%20ReckTrack%20Marketing%20Digital."
+                  href={`https://wa.me/${footerWhatsapp}?text=Hola%2C%20me%20interesa%20cotizar%20un%20proyecto%20con%20ReckTrack%20Marketing%20Digital.`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-sm transition-colors duration-300 hover:text-brand-primary"
@@ -289,7 +300,7 @@ export default function Footer() {
                   fontSize: "0.9rem",
                 }}
               >
-                Guadalajara, Jalisco, México
+                {footerLocation}
               </li>
             </ul>
           </div>
@@ -319,7 +330,7 @@ export default function Footer() {
 
           {/* Legal links */}
           <div className="flex items-center gap-1" role="list" aria-label="Legal links">
-            {legalLinks.map((link, i) => (
+            {liveLegalLinks.map((link, i) => (
               <span key={link.label} className="flex items-center" role="listitem">
                 {i > 0 && (
                   <span

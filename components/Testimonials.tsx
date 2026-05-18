@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import type { TestimonialsContent, VideoTestimonialItem } from "@/lib/content";
 
 /* ─────────────────────────────────────────────────────────────
    1. VIDEOS VERTICALES (carrusel)
@@ -20,7 +21,7 @@ interface VideoTestimonial {
   role: string;
 }
 
-const videoTestimonials: VideoTestimonial[] = [
+const defaultVideoTestimonials: VideoTestimonialItem[] = [
   {
     id: "v1",
     kind: "youtube",
@@ -57,10 +58,10 @@ const videoTestimonials: VideoTestimonial[] = [
    `googleSummary` con el rating y total reales del negocio.
    Perfil: RecTrack Marketing Digital
    ───────────────────────────────────────────────────────────── */
-const GOOGLE_MAPS_URL =
+const DEFAULT_GOOGLE_MAPS_URL =
   "https://www.google.com/maps/place/RecTrack+Marketing+Digital/@20.6392532,-103.4172459,17z/data=!4m6!3m5!1s0x8428b11b3c6f2a37:0x2fad2c1a8d9c65fe!8m2!3d20.6392532!4d-103.4172459!16s%2Fg%2F11j5_77vfk";
 
-const googleSummary = {
+const defaultGoogleSummary = {
   rating: 5.0,
   total: 3,
 };
@@ -74,7 +75,7 @@ interface GoogleReview {
   text: string;
 }
 
-const googleReviews: GoogleReview[] = [
+const defaultGoogleReviews: GoogleReview[] = [
   {
     author: "David Hermida",
     initials: "DH",
@@ -212,7 +213,7 @@ function VideoFrame({ video }: { video: VideoTestimonial }) {
 }
 
 /* ───────────────── Carrusel ───────────────── */
-function VideoCarousel() {
+function VideoCarousel({ videos }: { videos: VideoTestimonialItem[] }) {
   const scrollerRef = useRef<HTMLDivElement>(null);
   const [canPrev, setCanPrev] = useState(false);
   const [canNext, setCanNext] = useState(true);
@@ -251,7 +252,7 @@ function VideoCarousel() {
         className="flex gap-6 overflow-x-auto pb-4 snap-x snap-mandatory"
         style={{ scrollbarWidth: "none" }}
       >
-        {videoTestimonials.map((v) => (
+        {videos.map((v) => (
           <div
             key={v.id}
             data-card
@@ -418,8 +419,14 @@ function ReviewCard({ review }: { review: GoogleReview }) {
 }
 
 /* ───────────────── Sección ───────────────── */
-export default function Testimonials() {
+export default function Testimonials({ data }: { data?: TestimonialsContent }) {
   const { ref, visible } = useScrollReveal();
+  const videos = data?.videos ?? defaultVideoTestimonials;
+  const reviews = data?.googleReviews ?? defaultGoogleReviews;
+  const summary = data?.googleSummary ?? defaultGoogleSummary;
+  const mapsUrl = data?.googleMapsUrl ?? DEFAULT_GOOGLE_MAPS_URL;
+  const sectionLabel = data?.sectionLabel ?? "Testimonios";
+  const heading = data?.heading ?? "Lo que nuestros clientes realmente dicen.";
 
   return (
     <section
@@ -449,7 +456,7 @@ export default function Testimonials() {
                 letterSpacing: "0.15em",
               }}
             >
-              Testimonios
+              {sectionLabel}
             </span>
             <div className="w-8 h-0.5" style={{ backgroundColor: "#B71C1C" }} />
           </div>
@@ -466,7 +473,7 @@ export default function Testimonials() {
             }}
           >
             Lo que nuestros clientes{" "}
-            <span style={{ color: "#B71C1C" }}>realmente dicen.</span>
+            <span style={{ color: "#B71C1C" }}>{heading.includes('realmente') ? 'realmente dicen.' : heading}</span>
           </h2>
 
           <p
@@ -511,9 +518,9 @@ export default function Testimonials() {
                       color: "var(--color-text)",
                     }}
                   >
-                    {googleSummary.rating.toFixed(1)}
+                    {summary.rating.toFixed(1)}
                   </span>
-                  <StarRow count={Math.round(googleSummary.rating)} size={15} />
+                  <StarRow count={Math.round(summary.rating)} size={15} />
                   <span
                     className="font-body"
                     style={{
@@ -522,14 +529,14 @@ export default function Testimonials() {
                       color: "var(--color-muted)",
                     }}
                   >
-                    ({googleSummary.total} reseñas)
+                    ({summary.total} reseñas)
                   </span>
                 </div>
               </div>
             </div>
 
             <a
-              href={GOOGLE_MAPS_URL}
+              href={mapsUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 font-display transition-transform hover:scale-[1.03]"
@@ -556,14 +563,14 @@ export default function Testimonials() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8 items-stretch">
-            {googleReviews.map((r) => (
+            {reviews.map((r) => (
               <ReviewCard key={r.author} review={r} />
             ))}
           </div>
         </div>
 
         {/* Carrusel de videos verticales */}
-        <VideoCarousel />
+        <VideoCarousel videos={videos} />
       </div>
     </section>
   );

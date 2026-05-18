@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from "react";
+import type { StatsContent } from "@/lib/content";
 
 interface Stat {
   target: number;
@@ -18,7 +19,7 @@ const iconProps = {
   "aria-hidden": true,
 } as const;
 
-const stats: Stat[] = [
+const defaultStats: Stat[] = [
   {
     target: 1000,
     suffix: "+",
@@ -197,10 +198,16 @@ function StatItem({
   );
 }
 
-export default function Stats() {
+export default function Stats({ data }: { data?: StatsContent }) {
   const sectionRef = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
   const [active, setActive] = useState(false);
+  const stats = defaultStats.map((s, i) => ({
+    ...s,
+    ...(data?.items[i] ? { target: data.items[i].target, suffix: data.items[i].suffix, label: data.items[i].label, description: data.items[i].description } : {}),
+  }));
+  const sectionLabel = data?.sectionLabel ?? "Por Qué ReckTrack";
+  const heading = data?.heading ?? "Los números no mienten. Los nuestros hablan fuerte.";
 
   useEffect(() => {
     const el = sectionRef.current;
@@ -246,7 +253,7 @@ export default function Stats() {
                 letterSpacing: "0.18em",
               }}
             >
-              Por Qué ReckTrack
+              {sectionLabel}
             </span>
           </div>
           <h2
@@ -259,8 +266,7 @@ export default function Stats() {
               letterSpacing: "-0.02em",
             }}
           >
-            Los números no mienten.{" "}
-            <span style={{ color: "#B71C1C" }}>Los nuestros hablan fuerte.</span>
+            {heading.split('. ').map((part, i, arr) => i === arr.length - 1 ? <span key={i} style={{ color: "#B71C1C" }}>{part}</span> : <span key={i}>{part}. </span>)}
           </h2>
         </div>
 

@@ -1,8 +1,9 @@
 'use client';
 
 import { useEffect, useState } from "react";
+import type { HeroContent } from "@/lib/content";
 
-const headline = ["Impulsando", "marcas", "que", "generan", "cambios."];
+const defaultHeadline = ["Impulsando", "marcas", "que", "generan", "cambios."];
 
 const steps = [
   {
@@ -106,7 +107,16 @@ const steps = [
   },
 ];
 
-export default function Hero() {
+export default function Hero({ data }: { data?: HeroContent }) {
+  const headline = data?.headline ?? defaultHeadline;
+  const eyebrow = data?.eyebrow ?? "Agencia Digital Integral";
+  const ctaPrimary = data?.ctaPrimary ?? "Iniciar Proyecto";
+  const trustStats = data?.trustStats ?? [
+    { value: "50+", label: "Clientes" },
+    { value: "7+",  label: "Años" },
+    { value: "4",   label: "Servicios" },
+    { value: "100%",label: "Satisfacción" },
+  ];
   const [mounted, setMounted] = useState(false);
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
@@ -191,7 +201,7 @@ export default function Hero() {
                 style={{ borderColor: "var(--color-brand-red-border)", backgroundColor: "var(--color-brand-red-bg)" }}
               >
                 <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: "#B71C1C", boxShadow: "0 0 6px #B71C1C" }} />
-                <span style={{ fontFamily: "var(--font-body)", fontWeight: 500, fontSize: "0.65rem", color: "var(--color-brand-light)", letterSpacing: "0.18em", textTransform: "uppercase" }}>Agencia Digital Integral</span>
+                <span style={{ fontFamily: "var(--font-body)", fontWeight: 500, fontSize: "0.65rem", color: "var(--color-brand-light)", letterSpacing: "0.18em", textTransform: "uppercase" }}>{eyebrow}</span>
               </span>
             </div>
 
@@ -215,7 +225,7 @@ export default function Hero() {
               className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-white"
               style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "0.95rem", background: "linear-gradient(135deg, #B71C1C 0%, #7F0000 100%)", boxShadow: "0 4px 20px rgba(183,28,28,0.4)", opacity: mounted ? 1 : 0, transform: mounted ? "translateY(0)" : "translateY(10px)", transition: "opacity 0.5s ease 0.7s, transform 0.5s ease 0.7s" }}
             >
-              Iniciar Proyecto
+              {ctaPrimary}
               <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
             </button>
 
@@ -225,10 +235,10 @@ export default function Hero() {
               style={{ borderColor: "var(--color-border)", opacity: mounted ? 1 : 0, transition: "opacity 0.5s ease 1s" }}
             >
               {[
-                { icon: <svg viewBox="0 0 20 20" fill="none" className="w-3.5 h-3.5"><circle cx="7" cy="6" r="2.5" stroke="var(--color-brand-glow)" strokeWidth="1.6"/><path d="M1 17c0-3 2.5-5 6-5" stroke="var(--color-brand-glow)" strokeWidth="1.6" strokeLinecap="round"/><circle cx="13" cy="6" r="2.5" stroke="var(--color-brand-glow)" strokeWidth="1.6"/><path d="M13 12c3.5 0 6 2 6 5" stroke="var(--color-brand-glow)" strokeWidth="1.6" strokeLinecap="round"/></svg>, value: "50+", label: "Clientes" },
-                { icon: <svg viewBox="0 0 20 20" fill="none" className="w-3.5 h-3.5"><rect x="2" y="4" width="16" height="13" rx="2" stroke="var(--color-brand-glow)" strokeWidth="1.6"/><path d="M6 2v4M14 2v4M2 9h16" stroke="var(--color-brand-glow)" strokeWidth="1.6" strokeLinecap="round"/></svg>, value: "7+", label: "Años" },
-                { icon: <svg viewBox="0 0 20 20" fill="none" className="w-3.5 h-3.5"><path d="M10 2l2 4.9 5.4.8-3.9 3.8.9 5.3L10 14.2l-4.8 2.6.9-5.3L2.2 7.7l5.4-.8L10 2z" stroke="var(--color-brand-glow)" strokeWidth="1.6" strokeLinejoin="round"/></svg>, value: "4", label: "Servicios" },
-                { icon: <svg viewBox="0 0 20 20" fill="none" className="w-3.5 h-3.5"><circle cx="10" cy="10" r="8" stroke="var(--color-brand-glow)" strokeWidth="1.6"/><path d="M7 12.5s1.2 1.5 3 1.5 3-1.5 3-1.5" stroke="var(--color-brand-glow)" strokeWidth="1.6" strokeLinecap="round"/><circle cx="7.5" cy="8.5" r="1" fill="var(--color-brand-glow)"/><circle cx="12.5" cy="8.5" r="1" fill="var(--color-brand-glow)"/></svg>, value: "100%", label: "Satisfacción" },
+                { icon: <svg viewBox="0 0 20 20" fill="none" className="w-3.5 h-3.5"><circle cx="7" cy="6" r="2.5" stroke="var(--color-brand-glow)" strokeWidth="1.6"/><path d="M1 17c0-3 2.5-5 6-5" stroke="var(--color-brand-glow)" strokeWidth="1.6" strokeLinecap="round"/><circle cx="13" cy="6" r="2.5" stroke="var(--color-brand-glow)" strokeWidth="1.6"/><path d="M13 12c3.5 0 6 2 6 5" stroke="var(--color-brand-glow)" strokeWidth="1.6" strokeLinecap="round"/></svg>, value: trustStats[0]?.value ?? "50+", label: trustStats[0]?.label ?? "Clientes" },
+                { icon: <svg viewBox="0 0 20 20" fill="none" className="w-3.5 h-3.5"><rect x="2" y="4" width="16" height="13" rx="2" stroke="var(--color-brand-glow)" strokeWidth="1.6"/><path d="M6 2v4M14 2v4M2 9h16" stroke="var(--color-brand-glow)" strokeWidth="1.6" strokeLinecap="round"/></svg>, value: trustStats[1]?.value ?? "7+", label: trustStats[1]?.label ?? "Años" },
+                { icon: <svg viewBox="0 0 20 20" fill="none" className="w-3.5 h-3.5"><path d="M10 2l2 4.9 5.4.8-3.9 3.8.9 5.3L10 14.2l-4.8 2.6.9-5.3L2.2 7.7l5.4-.8L10 2z" stroke="var(--color-brand-glow)" strokeWidth="1.6" strokeLinejoin="round"/></svg>, value: trustStats[2]?.value ?? "4", label: trustStats[2]?.label ?? "Servicios" },
+                { icon: <svg viewBox="0 0 20 20" fill="none" className="w-3.5 h-3.5"><circle cx="10" cy="10" r="8" stroke="var(--color-brand-glow)" strokeWidth="1.6"/><path d="M7 12.5s1.2 1.5 3 1.5 3-1.5 3-1.5" stroke="var(--color-brand-glow)" strokeWidth="1.6" strokeLinecap="round"/><circle cx="7.5" cy="8.5" r="1" fill="var(--color-brand-glow)"/><circle cx="12.5" cy="8.5" r="1" fill="var(--color-brand-glow)"/></svg>, value: trustStats[3]?.value ?? "100%", label: trustStats[3]?.label ?? "Satisfacción" },
               ].map((s) => (
                 <div key={s.label} className="flex items-center gap-1">
                   <div className="flex-shrink-0">{s.icon}</div>
@@ -359,7 +369,7 @@ export default function Hero() {
                     textTransform: "uppercase",
                   }}
                 >
-                  Agencia Digital Integral
+                  {eyebrow}
                 </span>
               </span>
             </div>
@@ -433,7 +443,7 @@ export default function Hero() {
                   boxShadow: "0 4px 24px rgba(183,28,28,0.4)",
                 }}
               >
-                Iniciar Proyecto
+                {ctaPrimary}
                 <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                   <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
@@ -466,19 +476,19 @@ export default function Hero() {
               {[
                 {
                   icon: <svg viewBox="0 0 20 20" fill="none" className="w-4 h-4"><circle cx="7" cy="6" r="2.5" stroke="var(--color-brand-glow)" strokeWidth="1.6"/><path d="M1 17c0-3 2.5-5 6-5" stroke="var(--color-brand-glow)" strokeWidth="1.6" strokeLinecap="round"/><circle cx="13" cy="6" r="2.5" stroke="var(--color-brand-glow)" strokeWidth="1.6"/><path d="M13 12c3.5 0 6 2 6 5" stroke="var(--color-brand-glow)" strokeWidth="1.6" strokeLinecap="round"/></svg>,
-                  value: "50+", label: "Clientes"
+                  value: trustStats[0]?.value ?? "50+", label: trustStats[0]?.label ?? "Clientes"
                 },
                 {
                   icon: <svg viewBox="0 0 20 20" fill="none" className="w-4 h-4"><rect x="2" y="4" width="16" height="13" rx="2" stroke="var(--color-brand-glow)" strokeWidth="1.6"/><path d="M6 2v4M14 2v4M2 9h16" stroke="var(--color-brand-glow)" strokeWidth="1.6" strokeLinecap="round"/></svg>,
-                  value: "7+", label: "Años"
+                  value: trustStats[1]?.value ?? "7+", label: trustStats[1]?.label ?? "Años"
                 },
                 {
                   icon: <svg viewBox="0 0 20 20" fill="none" className="w-4 h-4"><path d="M10 2l2 4.9 5.4.8-3.9 3.8.9 5.3L10 14.2l-4.8 2.6.9-5.3L2.2 7.7l5.4-.8L10 2z" stroke="var(--color-brand-glow)" strokeWidth="1.6" strokeLinejoin="round"/></svg>,
-                  value: "4", label: "Servicios"
+                  value: trustStats[2]?.value ?? "4", label: trustStats[2]?.label ?? "Servicios"
                 },
                 {
                   icon: <svg viewBox="0 0 20 20" fill="none" className="w-4 h-4"><circle cx="10" cy="10" r="8" stroke="var(--color-brand-glow)" strokeWidth="1.6"/><path d="M7 12.5s1.2 1.5 3 1.5 3-1.5 3-1.5" stroke="var(--color-brand-glow)" strokeWidth="1.6" strokeLinecap="round"/><circle cx="7.5" cy="8.5" r="1" fill="var(--color-brand-glow)"/><circle cx="12.5" cy="8.5" r="1" fill="var(--color-brand-glow)"/></svg>,
-                  value: "100%", label: "Satisfacción"
+                  value: trustStats[3]?.value ?? "100%", label: trustStats[3]?.label ?? "Satisfacción"
                 },
               ].map((s) => (
                 <div key={s.label} className="flex items-center gap-1.5 lg:gap-2">

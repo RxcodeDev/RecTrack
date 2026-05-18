@@ -1,0 +1,141 @@
+{
+  "meta": {
+    "title": "ReckTrack Marketing Digital — Construimos Marcas que se Mueven",
+    "description": "ReckTrack MD es una agencia de marketing digital integral especializada en impulsar marcas con estrategia, tecnología y creatividad.",
+    "ogTitle": "ReckTrack Marketing Digital",
+    "ogDescription": "Impulsamos marcas que generan cambios."
+  },
+  "navbar": {
+    "whatsappNumber": "523336154478",
+    "whatsappMessage": "Hola%2C%20me%20interesa%20cotizar%20un%20proyecto%20con%20ReckTrack%20Marketing%20Digital."
+  },
+  "hero": {
+    "eyebrow": "Agencia Digital Integral",
+    "headline": ["Impulsando", "marcas", "que", "generan", "cambios."],
+    "subheadline": "ReckTrack MD combina estrategia, tecnología y creatividad para impulsar tu marca.",
+    "ctaPrimary": "Iniciar Proyecto",
+    "ctaSecondary": "Ver Nuestro Trabajo",
+    "trustStats": [
+      { "value": "50+", "label": "Clientes" },
+      { "value": "7+", "label": "Años" },
+      { "value": "4", "label": "Servicios" },
+      { "value": "100%", "label": "Satisfacción" }
+    ]
+  },
+  "clients": {
+    "label": "Empresas que confían en nosotros",
+    "items": [
+      { "name": "Alui Holística",    "src": "/clientes/ALUI-HOLISTICA.png" },
+      { "name": "Bolis Purileo",     "src": "/clientes/Bolis_Purileo.png" },
+      { "name": "Dental White",      "src": "/clientes/dentalwhite.png" },
+      { "name": "Dr. René Dentista", "src": "/clientes/Dr Rene Dentista.png" },
+      { "name": "IDAM Arte",         "src": "/clientes/IDAM arte.png" },
+      { "name": "Glory Gtz Makeup",  "src": "/clientes/makeup_artist_glory.png" },
+      { "name": "SH Curly Store",    "src": "/clientes/SH curly store.png" },
+      { "name": "TeraFitness",       "src": "/clientes/TeraFitness_fisoteraipai.png" }
+    ]
+  },
+  "services": {
+    "sectionLabel": "Lo Que Hacemos",
+    "heading": "Todo lo que necesitas. Una sola agencia.",
+    "items": [
+      {
+        "title": "Desarrollo Web",
+        "description": "Sitios y apps rápidos, hechos para convertir.",
+        "detail": "Desarrollos a medida y e-commerce con tecnología moderna.",
+        "image": "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=900&q=80"
+      },
+      {
+        "title": "Contenido Audiovisual",
+        "description": "Video y storytelling que detiene el scroll.",
+        "detail": "Producción de video, reels y cobertura de eventos.",
+        "image": "https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&w=900&q=80"
+      },
+      {
+        "title": "Fotografía",
+        "description": "Imágenes que comunican tu marca.",
+        "detail": "Sesiones de producto, editoriales y eventos.",
+        "image": "https://images.unsplash.com/photo-1452587925148-ce544e77e70d?auto=format&fit=crop&w=900&q=80"
+      },
+      {
+        "title": "Campañas de Marketing",
+        "description": "Estrategias que generan resultados.",
+        "detail": "Medios pagados, SEO y analítica en un solo lugar.",
+        "image": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=900&q=80"
+      }
+    ]
+  },
+  "stats": {
+    "sectionLabel": "Por Qué ReckTrack",
+    "heading": "Los números no mienten. Los nuestros hablan fuerte.",
+    "items": [
+      { "target": 1000, "suffix": "+", "label": "Proyectos Entregados", "description": "Presencia nacional." },
+      { "target": 98,   "suffix": "%", "label": "Retención de Clientes", "description": "Vuelven porque funciona." },
+      { "target": 5,    "suffix": "★", "label": "Calificación Promedio", "description": "En cada servicio." },
+      { "target": 7,    "suffix": "+", "label": "Años de Experiencia",   "description": "Oficio comprobado." }
+    ]
+  },
+  "portfolio": {
+    "sectionLabel": "Trabajo Selecto",
+    "heading": "Trabajo que se gana la atención.",
+    "ctaLabel": "Ver Portafolio Completo",
+    "photos": [
+      { "img": "https://images.unsplash.com/photo-1561214115-f2f134cc4912?w=1200&q=80", "client": "IDAM Arte",          "category": "Identidad de Marca",    "desc": "Branding integral para galería de arte contemporáneo." },
+      { "img": "https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?w=800&q=80",  "client": "Makeup Artist Glory","category": "Serie Fotográfica",      "desc": "Look-book para artista de maquillaje profesional." },
+      { "img": "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=800&q=80",  "client": "SH Curly Store",    "category": "Fotografía de Producto", "desc": "E-commerce y redes." },
+      { "img": "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&q=80",  "client": "TeraFitness",       "category": "Campaña Digital",        "desc": "Estrategia y campañas para fisioterapia." },
+      { "img": "https://images.unsplash.com/photo-1606811971618-4486d14f3f99?w=800&q=80",  "client": "Dental White",      "category": "Desarrollo Web",         "desc": "Sitio web clínica dental." }
+    ],
+    "videos": [
+      { "src": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",              "poster": "https://images.unsplash.com/photo-1574717024453-354056afd6fc?w=800&q=80",  "client": "Bolis Purileo",      "category": "Spot Publicitario",    "desc": "Campaña audiovisual para lanzamiento de producto.", "duration": "2:34", "featured": true, "tagline": "Contenido que conecta marcas con personas reales.", "orientation": "horizontal" },
+      { "src": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",             "poster": "https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?w=400&q=80",  "client": "Makeup Artist Glory","category": "Reel",                 "desc": "Transformación para Instagram.",                    "duration": "0:28", "featured": true, "tagline": "El antes y después que enamora.",                 "orientation": "vertical" },
+      { "src": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",                 "poster": "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=400&q=80",  "client": "ALUI Holística",     "category": "Story",                "desc": "Contenido vertical de marca.",                      "duration": "0:45", "featured": true, "tagline": "Bienestar en cada frame.",                        "orientation": "vertical" },
+      { "src": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",            "poster": "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&q=80", "client": "TeraFitness",        "category": "Reel",                 "desc": "Tips de fisioterapia.",                             "duration": "0:52", "featured": true, "tagline": "Mueve tu marca con propósito.",                    "orientation": "vertical" },
+      { "src": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4",           "poster": "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=700&q=80", "client": "Dr. René Dentista",  "category": "Video Institucional",  "desc": "Presentación corporativa para clínica dental.",     "duration": "1:48", "featured": true, "tagline": "Tu clínica, vista por miles de pacientes nuevos.", "orientation": "horizontal" },
+      { "src": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4", "poster": "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=700&q=80",  "client": "TeraFitness",        "category": "Testimonial",          "desc": "Testimoniales en video de pacientes.",              "duration": "3:12", "featured": true, "tagline": "Resultados reales que inspiran confianza.",        "orientation": "horizontal" },
+      { "src": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4",          "poster": "https://images.unsplash.com/photo-1563986768609-322da13575f3?w=700&q=80", "client": "SH Curly Store",     "category": "Review de Producto",   "desc": "Video review para canal de YouTube.",               "duration": "4:05", "featured": true, "tagline": "Productos que brillan frente a cámara.",          "orientation": "horizontal" }
+    ]
+  },
+  "testimonials": {
+    "sectionLabel": "Testimonios",
+    "heading": "Lo que nuestros clientes realmente dicen.",
+    "videos": [
+      { "id": "v1", "kind": "youtube", "src": "https://www.youtube.com/embed/REEMPLAZAR_ID_1", "name": "Carolina Ferreira", "role": "Directora de Marketing · Meridian Finance" },
+      { "id": "v2", "kind": "youtube", "src": "https://www.youtube.com/embed/REEMPLAZAR_ID_2", "name": "James Oduya",       "role": "Fundador y CEO · Volta Spirits" },
+      { "id": "v3", "kind": "youtube", "src": "https://www.youtube.com/embed/REEMPLAZAR_ID_3", "name": "Sofía Marchetti",   "role": "Directora Creativa · Aurae Botanicals" },
+      { "id": "v4", "kind": "youtube", "src": "https://www.youtube.com/embed/REEMPLAZAR_ID_4", "name": "Diego Salazar",     "role": "Gerente de Crecimiento · Lumen Co." }
+    ],
+    "googleSummary": { "rating": 5.0, "total": 3 },
+    "googleMapsUrl": "https://www.google.com/maps/place/RecTrack+Marketing+Digital/@20.6392532,-103.4172459,17z/data=!4m6!3m5!1s0x8428b11b3c6f2a37:0x2fad2c1a8d9c65fe!8m2!3d20.6392532!4d-103.4172459!16s%2Fg%2F11j5_77vfk",
+    "googleReviews": [
+      { "author": "David Hermida",           "initials": "DH", "avatarBg": "#B71C1C", "rating": 5, "timeAgo": "Hace 6 años", "text": "Excelente servicio, atención y seguimiento a tus redes sociales 😍" },
+      { "author": "Julio Cesar Lopez Cerdan","initials": "JC", "avatarBg": "#7F0000", "rating": 5, "timeAgo": "Hace 6 años", "text": "La mejor agencia de marketing, gracias por ayudarme a hacer crecer mi negocio con su servicio de publicidad en Guadalajara y Veracruz 👏🏻👏🏻👏🏻🌟🌟🌟🌟🌟" },
+      { "author": "Ismael Zav",              "initials": "IZ", "avatarBg": "#D32F2F", "rating": 5, "timeAgo": "Hace 6 años", "text": "Excelente atención y trabajo, personas sumamente responsables y profesionales recomendado sin duda alguna" }
+    ]
+  },
+  "contact": {
+    "sectionLabel": "Contáctanos",
+    "heading": "¿Listo para crecer?",
+    "subtext": "Cuéntanos sobre tu proyecto y te responderemos en un día hábil.",
+    "email": "contacto@rectrackmarketingdigital.com",
+    "phone": "+52 (33) 3615-4478",
+    "location": "Guadalajara, Jalisco, México"
+  },
+  "footer": {
+    "tagline": "Impulsando marcas que generan cambios.",
+    "email": "contacto@rectrackmarketingdigital.com",
+    "phone": "+52 (33) 3615-4478",
+    "whatsappNumber": "523336154478",
+    "location": "Guadalajara, Jalisco, México",
+    "social": {
+      "facebook":  "https://www.facebook.com/rectrackmarketingdigital",
+      "tiktok":    "https://www.tiktok.com/@rectrackmarketingdigital",
+      "instagram": "https://www.instagram.com/rectrackmarketingdigital"
+    },
+    "legalLinks": [
+      { "label": "Política de Privacidad", "href": "#" },
+      { "label": "Términos de Servicio",   "href": "#" },
+      { "label": "Política de Cookies",    "href": "#" }
+    ]
+  }
+}

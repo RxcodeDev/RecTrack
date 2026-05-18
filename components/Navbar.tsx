@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import type { NavbarContent } from "@/lib/content";
 
 function ReckTrackLogo({ className = "" }: { className?: string }) {
   return (
@@ -22,7 +23,9 @@ const navLinks = [
   { label: "Contacto", href: "#contact" },
 ];
 
-export default function Navbar() {
+export default function Navbar({ data }: { data?: NavbarContent }) {
+  const whatsappNumber = data?.whatsappNumber ?? "523336154478";
+  const whatsappMessage = data?.whatsappMessage ?? "Hola%2C%20me%20interesa%20cotizar%20un%20proyecto%20con%20ReckTrack%20Marketing%20Digital.";
   const [scrolled,     setScrolled]     = useState(false);
   const [menuOpen,     setMenuOpen]     = useState(false);
   const [activeLink,   setActiveLink]   = useState("");
@@ -92,7 +95,7 @@ export default function Navbar() {
               </button>
             ))}
             <a
-              href="https://wa.me/523336154478?text=Hola%2C%20me%20interesa%20cotizar%20un%20proyecto%20con%20ReckTrack%20Marketing%20Digital."
+              href={`https://wa.me/${whatsappNumber}?text=${whatsappMessage}`}
               target="_blank"
               rel="noopener noreferrer"
               className="ml-2 inline-flex items-center gap-2 px-5 py-2 rounded-lg text-white text-sm font-display font-600 tracking-wide transition-all duration-300 hover:scale-105 active:scale-95"

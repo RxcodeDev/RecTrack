@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from "react";
+import type { ServicesContent } from "@/lib/content";
 
 interface Service {
   title: string;
@@ -18,7 +19,7 @@ const iconProps = {
   "aria-hidden": true,
 } as const;
 
-const services: Service[] = [
+const defaultServices: Service[] = [
   {
     title: "Desarrollo Web",
     description: "Sitios y apps rápidos, hechos para convertir.",
@@ -241,8 +242,14 @@ function ServiceCard({
   );
 }
 
-export default function Services() {
+export default function Services({ data }: { data?: ServicesContent }) {
   const { ref, visible } = useScrollReveal();
+  const services = defaultServices.map((s, i) => ({
+    ...s,
+    ...(data?.items[i] ? { title: data.items[i].title, description: data.items[i].description, detail: data.items[i].detail, image: data.items[i].image } : {}),
+  }));
+  const sectionLabel = data?.sectionLabel ?? "Lo Que Hacemos";
+  const heading = data?.heading ?? "Todo lo que necesitas. Una sola agencia.";
 
   return (
     <section id="services" className="py-24" style={{ backgroundColor: "var(--color-bg)" }}>
@@ -269,7 +276,7 @@ export default function Services() {
                 letterSpacing: "0.15em",
               }}
             >
-              Lo Que Hacemos
+              {sectionLabel}
             </span>
           </div>
 
@@ -284,8 +291,7 @@ export default function Services() {
               letterSpacing: "-0.02em",
             }}
           >
-            Todo lo que necesitas.{" "}
-            <span style={{ color: "#B71C1C" }}>Una sola agencia.</span>
+            {heading.split('. ').map((part, i, arr) => i === arr.length - 1 ? <span key={i} style={{ color: "#B71C1C" }}>{part}</span> : <span key={i}>{part}. </span>)}
           </h2>
 
           <p

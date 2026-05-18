@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import type { PortfolioContent } from "@/lib/content";
 
 function useScrollReveal(threshold = 0.1) {
   const ref = useRef<HTMLDivElement>(null);
@@ -180,9 +181,11 @@ function VideoTile({
   );
 }
 
-export default function Portfolio() {
+export default function Portfolio({ data }: { data?: PortfolioContent }) {
   const { ref, visible } = useScrollReveal();
   const { ref: ref2, visible: visible2 } = useScrollReveal();
+  const sectionLabel = data?.sectionLabel ?? "Trabajo Selecto";
+  const ctaLabel = data?.ctaLabel ?? "Ver Portafolio Completo";
 
   return (
     <section id="portfolio" className="py-24" style={{ backgroundColor: "var(--color-bg)" }}>
@@ -195,7 +198,7 @@ export default function Portfolio() {
             <div className="flex items-center gap-2 mb-4">
               <div className="w-8 h-0.5" style={{ backgroundColor: "var(--color-brand-primary)" }} />
               <span style={{ fontFamily: "var(--font-body)", fontWeight: 500, fontSize: "0.75rem", color: "var(--color-brand-primary)", letterSpacing: "0.15em", textTransform: "uppercase" }}>
-                Trabajo Selecto
+                {sectionLabel}
               </span>
             </div>
             <h2 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(2rem, 4vw, 3rem)", fontWeight: 800, color: "var(--color-text)", lineHeight: 1.1, letterSpacing: "-0.02em" }}>
@@ -333,7 +336,7 @@ export default function Portfolio() {
             className="inline-flex items-center gap-3 px-8 py-3.5 rounded-xl border transition-all duration-300 hover:-translate-y-0.5"
             style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: "0.95rem", color: "var(--color-text)", borderColor: "var(--color-border-soft)", backgroundColor: "var(--color-surface)" }}
           >
-            Ver Portafolio Completo
+            {ctaLabel}
             <svg viewBox="0 0 16 16" fill="none" width="16" height="16">
               <path d="M3 8h10M9 4l4 4-4 4" stroke="var(--color-brand-primary)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
