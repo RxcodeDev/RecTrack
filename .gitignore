@@ -38,4 +38,7 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
+
+# contact form submissions (local storage)
+/data/submissions.json
 next-env.d.ts

@@ -1,26 +1,245 @@
 @import "tailwindcss";
+@config "../tailwind.config.ts";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
+/* ─── Design tokens ──────────────────────────────────────────────── */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Brand palette */
+  --color-brand-primary: #B71C1C;
+  --color-brand-accent:  #D32F2F;
+  --color-brand-deep:    #7F0000;
+  --color-brand-glow:    #EF5350;
+  --color-brand-light:   #C62828;
+
+  /* Light UI — solid */
+  --color-bg:      #F8F7F5;
+  --color-surface: #FFFFFF;
+  --color-raised:  #F0EEEC;
+  --color-high:    #E5E3E0;
+  --color-text:    #0D0D0D;
+
+  --font-display: var(--font-display);
+  --font-body:    var(--font-body);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Light UI — semi-transparent (kept in :root, not @theme inline) */
+:root {
+  --color-border:           rgba(0,0,0,0.08);
+  --color-border-soft:      rgba(0,0,0,0.14);
+  --color-muted:            rgba(0,0,0,0.50);
+  --color-dim:              rgba(0,0,0,0.35);
+  --color-faint:            rgba(0,0,0,0.04);
+  --color-brand-red-bg:     rgba(183,28,28,0.08);
+  --color-brand-red-border: rgba(183,28,28,0.25);
+  --color-bg-overlay:       rgba(248,247,245,0.96);
+}
+
+/* ─── Base reset ──────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body), Georgia, serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display), Georgia, serif;
+}
+
+/* ─── Keyframe animations ─────────────────────────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes floatBlob {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50%       { transform: translate(20px, -20px) scale(1.05); }
+}
+
+@keyframes gradientShift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes slideUpOverlay {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+
+@keyframes countUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes ping {
+  0%        { transform: scale(1);   opacity: 0.7; }
+  70%, 100% { transform: scale(1.9); opacity: 0;   }
+}
+
+@keyframes stepIn {
+  0%   { opacity: 0; transform: translateY(14px) scale(0.94); filter: blur(5px); }
+  60%  { opacity: 1; filter: blur(0); }
+  100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+}
+
+@keyframes softGlow {
+  0%, 100% { opacity: 0.45; transform: scale(1); }
+  50%      { opacity: 0.85; transform: scale(1.12); }
+}
+
+@keyframes spinSlow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes nodeAppear {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes ctaPulse {
+  0%, 100% { transform: scale(1);    }
+  50%      { transform: scale(1.08); }
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* ─── Animation utility classes ──────────────────────────────────── */
+.animate-fade-up {
+  animation: fadeUp 0.7s ease forwards;
+}
+
+.animate-float-blob {
+  animation: floatBlob 8s ease-in-out infinite;
+}
+
+.animate-gradient-shift {
+  animation: gradientShift 6s ease infinite;
+  background-size: 200% 200%;
+}
+
+/* ─── Scroll reveal helpers ───────────────────────────────────────── */
+.reveal-hidden {
+  opacity: 0;
+  transform: translateY(2rem);
+}
+
+.reveal-visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+/* ─── Word-by-word stagger (Hero headline) ────────────────────────── */
+.word-reveal {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(24px);
+  animation: fadeUp 0.65s ease forwards;
+}
+
+/* ─── Scrollbar styling ───────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #E8E8E8;
+}
+::-webkit-scrollbar-thumb {
+  background: #D32F2F;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #B71C1C;
+}
+
+/* ─── Focus ring override for brand color ────────────────────────── */
+.focus-brand:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(183, 28, 28, 0.25);
+}
+
+/* ─── Portfolio overlay transition ───────────────────────────────── */
+.portfolio-overlay {
+  transform: translateY(100%);
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.portfolio-tile:hover .portfolio-overlay {
+  transform: translateY(0);
+}
+
+/* ─── Nav underline animation ────────────────────────────────────── */
+.nav-link {
+  position: relative;
+}
+
+.nav-link::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: #B71C1C;
+  transition: width 0.3s ease;
+}
+
+.nav-link:hover::after {
+  width: 100%;
+}
+
+/* ─── Button base ─────────────────────────────────────────────────── */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 2rem;
+  background-color: #B71C1C;
+  color: #ffffff;
+  font-family: var(--font-display), Georgia, serif;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  letter-spacing: 0.02em;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-primary:hover {
+  background-color: #7F0000;
+  transform: scale(1.02);
+}
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 2rem;
+  border: 1px solid rgba(0,0,0,0.15);
+  color: rgba(0,0,0,0.65);
+  background-color: rgba(0,0,0,0.04);
+  font-family: var(--font-display), Georgia, serif;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  letter-spacing: 0.02em;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-ghost:hover {
+  background-color: rgba(0,0,0,0.08);
+  border-color: rgba(0,0,0,0.25);
+  color: #0D0D0D;
+  transform: scale(1.02);
 }
