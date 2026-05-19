@@ -1,28 +1,37 @@
 @import "tailwindcss";
 @config "../tailwind.config.ts";
 
-/* ─── Design tokens ──────────────────────────────────────────────── */
-@theme inline {
-  /* Brand palette */
+/* ─── Design tokens ──────────────────────────────────────────────────
+   TODOS los colores son variables. Estos son los valores POR DEFECTO;
+   Rxpanel los sobrescribe en runtime vía el <style> inyectado en el
+   layout (html:root) a partir de data/site-theme.json. No hardcodear
+   colores en componentes ni aquí: usar siempre var(--color-*).
+──────────────────────────────────────────────────────────────────── */
+:root {
+  /* Marca */
   --color-brand-primary: #B71C1C;
   --color-brand-accent:  #D32F2F;
   --color-brand-deep:    #7F0000;
   --color-brand-glow:    #EF5350;
   --color-brand-light:   #C62828;
+  --color-brand-bright:  #FF5252;
+  --color-brand-coral:   #FF6B6B;
+  --color-brand-subtle:  #F8EEEE;
 
-  /* Light UI — solid */
-  --color-bg:      #F8F7F5;
-  --color-surface: #FFFFFF;
-  --color-raised:  #F0EEEC;
-  --color-high:    #E5E3E0;
-  --color-text:    #0D0D0D;
+  /* CTA WhatsApp */
+  --color-whatsapp:        #15A148;
+  --color-whatsapp-bright: #25D366;
 
-  --font-display: var(--font-display);
-  --font-body:    var(--font-body);
-}
+  /* Superficies y texto */
+  --color-bg:       #F8F7F5;
+  --color-surface:  #FFFFFF;
+  --color-raised:   #F0EEEC;
+  --color-high:     #E5E3E0;
+  --color-text:     #0D0D0D;
+  --color-on-brand: #FFFFFF;
+  --color-ink:      #2A2A2A;
 
-/* Light UI — semi-transparent (kept in :root, not @theme inline) */
-:root {
+  /* UI semitransparente */
   --color-border:           rgba(0,0,0,0.08);
   --color-border-soft:      rgba(0,0,0,0.14);
   --color-muted:            rgba(0,0,0,0.50);
@@ -31,6 +40,12 @@
   --color-brand-red-bg:     rgba(183,28,28,0.08);
   --color-brand-red-border: rgba(183,28,28,0.25);
   --color-bg-overlay:       rgba(248,247,245,0.96);
+  --color-scrollbar-track:  #E8E8E8;
+}
+
+@theme inline {
+  --font-display: var(--font-display);
+  --font-body:    var(--font-body);
 }
 
 /* ─── Base reset ──────────────────────────────────────────────────── */
@@ -156,20 +171,20 @@ h1, h2, h3, h4, h5, h6 {
   width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #E8E8E8;
+  background: var(--color-scrollbar-track);
 }
 ::-webkit-scrollbar-thumb {
-  background: #D32F2F;
+  background: var(--color-brand-accent);
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #B71C1C;
+  background: var(--color-brand-primary);
 }
 
 /* ─── Focus ring override for brand color ────────────────────────── */
 .focus-brand:focus {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(183, 28, 28, 0.25);
+  box-shadow: 0 0 0 3px var(--color-brand-red-border);
 }
 
 /* ─── Portfolio overlay transition ───────────────────────────────── */
@@ -194,7 +209,7 @@ h1, h2, h3, h4, h5, h6 {
   left: 0;
   width: 0;
   height: 2px;
-  background-color: #B71C1C;
+  background-color: var(--color-brand-primary);
   transition: width 0.3s ease;
 }
 
@@ -208,8 +223,8 @@ h1, h2, h3, h4, h5, h6 {
   align-items: center;
   justify-content: center;
   padding: 0.75rem 2rem;
-  background-color: #B71C1C;
-  color: #ffffff;
+  background-color: var(--color-brand-primary);
+  color: var(--color-on-brand);
   font-family: var(--font-display), Georgia, serif;
   font-weight: 600;
   border-radius: 0.5rem;
@@ -218,7 +233,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .btn-primary:hover {
-  background-color: #7F0000;
+  background-color: var(--color-brand-deep);
   transform: scale(1.02);
 }
 
@@ -227,9 +242,9 @@ h1, h2, h3, h4, h5, h6 {
   align-items: center;
   justify-content: center;
   padding: 0.75rem 2rem;
-  border: 1px solid rgba(0,0,0,0.15);
-  color: rgba(0,0,0,0.65);
-  background-color: rgba(0,0,0,0.04);
+  border: 1px solid var(--color-border-soft);
+  color: var(--color-muted);
+  background-color: var(--color-faint);
   font-family: var(--font-display), Georgia, serif;
   font-weight: 600;
   border-radius: 0.5rem;
@@ -238,8 +253,8 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .btn-ghost:hover {
-  background-color: rgba(0,0,0,0.08);
-  border-color: rgba(0,0,0,0.25);
-  color: #0D0D0D;
+  background-color: var(--color-border);
+  border-color: var(--color-border-soft);
+  color: var(--color-text);
   transform: scale(1.02);
 }

@@ -1,0 +1,34 @@
+{
+  "colors": {
+    "brand-primary": "#B71C1C",
+    "brand-accent": "#D32F2F",
+    "brand-deep": "#7F0000",
+    "brand-glow": "#EF5350",
+    "brand-light": "#C62828",
+    "brand-bright": "#FF5252",
+    "brand-coral": "#FF6B6B",
+    "brand-subtle": "#F8EEEE",
+    "whatsapp": "#15A148",
+    "whatsapp-bright": "#25D366",
+    "bg": "#F8F7F5",
+    "surface": "#FFFFFF",
+    "raised": "#F0EEEC",
+    "high": "#E5E3E0",
+    "text": "#0D0D0D",
+    "on-brand": "#FFFFFF",
+    "ink": "#2A2A2A",
+    "border": "rgba(0,0,0,0.08)",
+    "border-soft": "rgba(0,0,0,0.14)",
+    "muted": "rgba(0,0,0,0.50)",
+    "dim": "rgba(0,0,0,0.35)",
+    "faint": "rgba(0,0,0,0.04)",
+    "brand-red-bg": "rgba(183,28,28,0.08)",
+    "brand-red-border": "rgba(183,28,28,0.25)",
+    "bg-overlay": "rgba(248,247,245,0.96)",
+    "scrollbar-track": "#E8E8E8"
+  },
+  "logos": {
+    "logo_url": "/uploads/1779209385577-00_RECTRACK_transparente.png",
+    "favicon_url": "/uploads/1779209389379-00_RECTRACK_transparente.png"
+  }
+}

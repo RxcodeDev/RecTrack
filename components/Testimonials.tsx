@@ -79,7 +79,7 @@ const defaultGoogleReviews: GoogleReview[] = [
   {
     author: "David Hermida",
     initials: "DH",
-    avatarBg: "#B71C1C",
+    avatarBg: "var(--color-brand-primary)",
     rating: 5,
     timeAgo: "Hace 6 años",
     text: "Excelente servicio, atención y seguimiento a tus redes sociales 😍",
@@ -87,7 +87,7 @@ const defaultGoogleReviews: GoogleReview[] = [
   {
     author: "Julio Cesar Lopez Cerdan",
     initials: "JC",
-    avatarBg: "#7F0000",
+    avatarBg: "var(--color-brand-deep)",
     rating: 5,
     timeAgo: "Hace 6 años",
     text: "La mejor agencia de marketing, gracias por ayudarme a hacer crecer mi negocio con su servicio de publicidad en Guadalajara y Veracruz 👏🏻👏🏻👏🏻🌟🌟🌟🌟🌟",
@@ -95,7 +95,7 @@ const defaultGoogleReviews: GoogleReview[] = [
   {
     author: "Ismael Zav",
     initials: "IZ",
-    avatarBg: "#D32F2F",
+    avatarBg: "var(--color-brand-accent)",
     rating: 5,
     timeAgo: "Hace 6 años",
     text: "Excelente atención y trabajo, personas sumamente responsables y profesionales recomendado sin duda alguna",
@@ -147,7 +147,45 @@ function StarRow({ count = 5, size = 16 }: { count?: number; size?: number }) {
 }
 
 /* ───────────────── Reproductor de video vertical ───────────────── */
+/**
+ * Normaliza cualquier formato de URL a una URL embebible.
+ * Acepta: watch?v=ID, youtu.be/ID, /shorts/ID, /embed/ID, ID pelado
+ * (YouTube) · vimeo.com/ID, player.vimeo.com/video/ID, ID (Vimeo).
+ */
+function toEmbedUrl(kind: VideoKind, src: string): string {
+  const s = (src || "").trim();
+  if (!s) return s;
+
+  if (kind === "youtube") {
+    let id = "";
+    const m = s.match(
+      /(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/|live\/|v\/))([A-Za-z0-9_-]{6,})/,
+    );
+    if (m) id = m[1];
+    else if (/^[A-Za-z0-9_-]{6,}$/.test(s)) id = s; // ID pelado
+    return id ? `https://www.youtube.com/embed/${id}` : s;
+  }
+
+  if (kind === "vimeo") {
+    const m = s.match(/vimeo\.com\/(?:video\/)?(\d+)/);
+    const id = m ? m[1] : /^\d+$/.test(s) ? s : "";
+    return id ? `https://player.vimeo.com/video/${id}` : s;
+  }
+
+  return s; // file: URL directa
+}
+
+/** Plataforma real según la URL (tolera un `kind` mal configurado). */
+function detectKind(kind: VideoKind, src: string): VideoKind {
+  const s = (src || "").toLowerCase();
+  if (/youtu\.?be|youtube\.com/.test(s)) return "youtube";
+  if (/vimeo\.com/.test(s)) return "vimeo";
+  if (/\.(mp4|webm|ogg|mov)(\?|$)/.test(s)) return "file";
+  return kind;
+}
+
 function VideoFrame({ video }: { video: VideoTestimonial }) {
+  const kind = detectKind(video.kind, video.src);
   return (
     <div
       className="relative w-full h-full overflow-hidden rounded-2xl"
@@ -157,7 +195,7 @@ function VideoFrame({ video }: { video: VideoTestimonial }) {
         boxShadow: "0 4px 24px rgba(0,0,0,0.5)",
       }}
     >
-      {video.kind === "file" ? (
+      {kind === "file" ? (
         <video
           className="absolute inset-0 w-full h-full object-cover"
           src={video.src}
@@ -169,7 +207,7 @@ function VideoFrame({ video }: { video: VideoTestimonial }) {
       ) : (
         <iframe
           className="absolute inset-0 w-full h-full"
-          src={video.src}
+          src={toEmbedUrl(kind, video.src)}
           title={`Testimonio de ${video.name}`}
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
@@ -446,19 +484,19 @@ export default function Testimonials({ data }: { data?: TestimonialsContent }) {
           }}
         >
           <div className="flex items-center justify-center gap-2 mb-4">
-            <div className="w-8 h-0.5" style={{ backgroundColor: "#B71C1C" }} />
+            <div className="w-8 h-0.5" style={{ backgroundColor: "var(--color-brand-primary)" }} />
             <span
               className="text-xs uppercase tracking-widest font-body"
               style={{
                 fontFamily: "var(--font-body)",
                 fontWeight: 500,
-                color: "#B71C1C",
+                color: "var(--color-brand-primary)",
                 letterSpacing: "0.15em",
               }}
             >
               {sectionLabel}
             </span>
-            <div className="w-8 h-0.5" style={{ backgroundColor: "#B71C1C" }} />
+            <div className="w-8 h-0.5" style={{ backgroundColor: "var(--color-brand-primary)" }} />
           </div>
 
           <h2
@@ -473,7 +511,7 @@ export default function Testimonials({ data }: { data?: TestimonialsContent }) {
             }}
           >
             Lo que nuestros clientes{" "}
-            <span style={{ color: "#B71C1C" }}>{heading.includes('realmente') ? 'realmente dicen.' : heading}</span>
+            <span style={{ color: "var(--color-brand-primary)" }}>{heading.includes('realmente') ? 'realmente dicen.' : heading}</span>
           </h2>
 
           <p
@@ -544,8 +582,8 @@ export default function Testimonials({ data }: { data?: TestimonialsContent }) {
                 fontFamily: "var(--font-display)",
                 fontWeight: 700,
                 fontSize: "0.85rem",
-                color: "#fff",
-                backgroundColor: "#B71C1C",
+                color: "var(--color-on-brand)",
+                backgroundColor: "var(--color-brand-primary)",
               }}
             >
               Ver todas en Google

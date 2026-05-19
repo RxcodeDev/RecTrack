@@ -8,15 +8,19 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      // Todas las utilidades brand-* resuelven a variables CSS gestionadas
+      // desde Rxpanel (ver lib/theme.ts + app/globals.css :root).
       colors: {
         brand: {
-          primary: "#B71C1C",
-          accent:  "#D32F2F",
-          deep:    "#7F0000",
-          subtle:  "#F8EEEE",
-          surface: "#F5F5F5",
-          text:    "#212121",
-          muted:   "#757575",
+          primary: "var(--color-brand-primary)",
+          accent:  "var(--color-brand-accent)",
+          deep:    "var(--color-brand-deep)",
+          glow:    "var(--color-brand-glow)",
+          light:   "var(--color-brand-light)",
+          bright:  "var(--color-brand-bright)",
+          coral:   "var(--color-brand-coral)",
+          subtle:  "var(--color-brand-subtle)",
+          text:    "var(--color-text)",
         },
       },
       fontFamily: {

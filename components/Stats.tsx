@@ -27,8 +27,8 @@ const defaultStats: Stat[] = [
     description: "Presencia nacional.",
     icon: (
       <svg {...iconProps}>
-        <path d="M12 3l9 5-9 5-9-5 9-5z" stroke="#B71C1C" strokeWidth="2" strokeLinejoin="round" />
-        <path d="M3 13l9 5 9-5" stroke="#B71C1C" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M12 3l9 5-9 5-9-5 9-5z" stroke="var(--color-brand-primary)" strokeWidth="2" strokeLinejoin="round" />
+        <path d="M3 13l9 5 9-5" stroke="var(--color-brand-primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     ),
   },
@@ -39,8 +39,8 @@ const defaultStats: Stat[] = [
     description: "Vuelven porque funciona.",
     icon: (
       <svg {...iconProps}>
-        <path d="M4 11a8 8 0 0114-5l2 2M20 13a8 8 0 01-14 5l-2-2" stroke="#B71C1C" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-        <path d="M20 4v4h-4M4 20v-4h4" stroke="#B71C1C" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M4 11a8 8 0 0114-5l2 2M20 13a8 8 0 01-14 5l-2-2" stroke="var(--color-brand-primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M20 4v4h-4M4 20v-4h4" stroke="var(--color-brand-primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     ),
   },
@@ -51,7 +51,7 @@ const defaultStats: Stat[] = [
     description: "En cada servicio.",
     icon: (
       <svg {...iconProps}>
-        <path d="M12 3l2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8L3.5 9.2l5.9-.9L12 3z" stroke="#B71C1C" strokeWidth="2" strokeLinejoin="round" />
+        <path d="M12 3l2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8L3.5 9.2l5.9-.9L12 3z" stroke="var(--color-brand-primary)" strokeWidth="2" strokeLinejoin="round" />
       </svg>
     ),
   },
@@ -62,8 +62,8 @@ const defaultStats: Stat[] = [
     description: "Oficio comprobado.",
     icon: (
       <svg {...iconProps}>
-        <circle cx="12" cy="12" r="9" stroke="#B71C1C" strokeWidth="2" />
-        <path d="M12 7v5l3.5 2" stroke="#B71C1C" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        <circle cx="12" cy="12" r="9" stroke="var(--color-brand-primary)" strokeWidth="2" />
+        <path d="M12 7v5l3.5 2" stroke="var(--color-brand-primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     ),
   },
@@ -123,7 +123,7 @@ function StatItem({
       />
       <div
         className="absolute top-0 left-0 h-0.5 w-10 group-hover:w-full transition-all duration-700 ease-out"
-        style={{ backgroundColor: "#B71C1C" }}
+        style={{ backgroundColor: "var(--color-brand-primary)" }}
       />
 
       <div className="flex items-center justify-between mb-6">
@@ -163,7 +163,7 @@ function StatItem({
             fontFamily: "var(--font-display)",
             fontSize: "clamp(1.4rem, 2.5vw, 2rem)",
             fontWeight: 800,
-            color: "#B71C1C",
+            color: "var(--color-brand-primary)",
             lineHeight: 1,
           }}
         >
@@ -243,13 +243,13 @@ export default function Stats({ data }: { data?: StatsContent }) {
           }}
         >
           <div className="flex items-center gap-2 mb-4">
-            <div className="w-8 h-0.5" style={{ backgroundColor: "#B71C1C" }} />
+            <div className="w-8 h-0.5" style={{ backgroundColor: "var(--color-brand-primary)" }} />
             <span
               className="text-xs uppercase tracking-widest"
               style={{
                 fontFamily: "var(--font-body)",
                 fontWeight: 600,
-                color: "#B71C1C",
+                color: "var(--color-brand-primary)",
                 letterSpacing: "0.18em",
               }}
             >
@@ -266,7 +266,7 @@ export default function Stats({ data }: { data?: StatsContent }) {
               letterSpacing: "-0.02em",
             }}
           >
-            {heading.split('. ').map((part, i, arr) => i === arr.length - 1 ? <span key={i} style={{ color: "#B71C1C" }}>{part}</span> : <span key={i}>{part}. </span>)}
+            {heading.split('. ').map((part, i, arr) => i === arr.length - 1 ? <span key={i} style={{ color: "var(--color-brand-primary)" }}>{part}</span> : <span key={i}>{part}. </span>)}
           </h2>
         </div>
 

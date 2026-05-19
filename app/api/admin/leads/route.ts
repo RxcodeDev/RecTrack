@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { promises as fs } from "fs";
 import path from "path";
 import { corsHeaders, handlePreflight } from "@/lib/cors";
+import { requireAuth } from "@/lib/guard";
 
 const DB_PATH = path.join(process.cwd(), "data", "submissions.json");
 
@@ -11,6 +12,8 @@ export async function OPTIONS(req: NextRequest) {
 
 export async function GET(req: NextRequest) {
   const cors = corsHeaders(req);
+  const unauth = requireAuth(req);
+  if (unauth) return unauth;
   try {
     const raw = await fs.readFile(DB_PATH, "utf-8");
     const submissions = JSON.parse(raw) as unknown[];

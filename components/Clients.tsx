@@ -65,11 +65,11 @@ export default function Clients({ data }: { data?: ClientsContent }) {
         </div>
 
         {/* Logo grid — desktop/tablet */}
-        <div className="hidden sm:grid sm:grid-cols-4 lg:grid-cols-8 gap-6 items-center justify-items-center">
+        <div className="hidden sm:flex sm:flex-wrap justify-center gap-6 items-center">
           {clients.map((client, i) => (
             <div
               key={client.name}
-              className="w-full flex items-center justify-center px-3 py-2 grayscale hover:grayscale-0 transition-all duration-300 opacity-60 hover:opacity-100"
+              className="flex items-center justify-center px-3 py-2 grayscale hover:grayscale-0 transition-all duration-300 opacity-60 hover:opacity-100"
               style={{
                 opacity: visible ? undefined : 0,
                 animation: visible ? `fadeUp 0.5s ease forwards ${i * 0.07}s` : "none",

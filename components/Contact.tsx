@@ -120,8 +120,8 @@ const contactDetails = [
     value: "contacto@rectrackmarketingdigital.com",
     icon: (
       <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" aria-hidden="true">
-        <rect x="2" y="5" width="16" height="11" rx="2" stroke="#B71C1C" strokeWidth="1.6" />
-        <path d="M2 7l8 5 8-5" stroke="#B71C1C" strokeWidth="1.6" strokeLinecap="round" />
+        <rect x="2" y="5" width="16" height="11" rx="2" stroke="var(--color-brand-primary)" strokeWidth="1.6" />
+        <path d="M2 7l8 5 8-5" stroke="var(--color-brand-primary)" strokeWidth="1.6" strokeLinecap="round" />
       </svg>
     ),
   },
@@ -132,7 +132,7 @@ const contactDetails = [
       <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" aria-hidden="true">
         <path
           d="M4 3h3.5l1.5 4-2 1.5a10 10 0 004.5 4.5L13 11l4 1.5V16a1 1 0 01-1 1C6.5 17 3 10.5 3 4a1 1 0 011-1z"
-          stroke="#B71C1C"
+          stroke="var(--color-brand-primary)"
           strokeWidth="1.6"
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -147,11 +147,11 @@ const contactDetails = [
       <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" aria-hidden="true">
         <path
           d="M10 2a6 6 0 016 6c0 4-6 10-6 10S4 12 4 8a6 6 0 016-6z"
-          stroke="#B71C1C"
+          stroke="var(--color-brand-primary)"
           strokeWidth="1.6"
           strokeLinejoin="round"
         />
-        <circle cx="10" cy="8" r="2" stroke="#B71C1C" strokeWidth="1.6" />
+        <circle cx="10" cy="8" r="2" stroke="var(--color-brand-primary)" strokeWidth="1.6" />
       </svg>
     ),
   },
@@ -195,11 +195,11 @@ const inputBase: React.CSSProperties = {
   transition: "border-color 0.2s, box-shadow 0.2s",
 };
 const inputFocusStyle: React.CSSProperties = {
-  borderColor: "#B71C1C",
-  boxShadow: "0 0 0 3px rgba(183,28,28,0.12)",
+  borderColor: "var(--color-brand-primary)",
+  boxShadow: "0 0 0 3px color-mix(in srgb, var(--color-brand-primary) 12%, transparent)",
 };
 const inputErrorStyle: React.CSSProperties = {
-  borderColor: "#B71C1C",
+  borderColor: "var(--color-brand-primary)",
 };
 
 export default function Contact({ data }: { data?: ContactContent }) {
@@ -295,13 +295,13 @@ export default function Contact({ data }: { data?: ContactContent }) {
           }}
         >
           <div className="flex items-center gap-2 mb-4">
-            <div className="w-8 h-0.5" style={{ backgroundColor: "#B71C1C" }} />
+            <div className="w-8 h-0.5" style={{ backgroundColor: "var(--color-brand-primary)" }} />
             <span
               className="text-xs uppercase tracking-widest font-body"
               style={{
                 fontFamily: "var(--font-body)",
                 fontWeight: 500,
-                color: "#B71C1C",
+                color: "var(--color-brand-primary)",
                 letterSpacing: "0.15em",
               }}
             >
@@ -320,7 +320,7 @@ export default function Contact({ data }: { data?: ContactContent }) {
               letterSpacing: "-0.03em",
             }}
           >
-            {heading.split('crecer').length > 1 ? <>{heading.split('crecer')[0]}<span style={{ color: "#B71C1C" }}>crecer?</span></> : heading}
+            {heading.split('crecer').length > 1 ? <>{heading.split('crecer')[0]}<span style={{ color: "var(--color-brand-primary)" }}>crecer?</span></> : heading}
           </h2>
 
           <p
@@ -356,7 +356,7 @@ export default function Contact({ data }: { data?: ContactContent }) {
                 {/* Check mark */}
                 <div
                   className="w-16 h-16 rounded-full flex items-center justify-center mb-6"
-                  style={{ backgroundColor: "#B71C1C" }}
+                  style={{ backgroundColor: "var(--color-brand-primary)" }}
                 >
                   <svg
                     viewBox="0 0 24 24"
@@ -410,7 +410,7 @@ export default function Contact({ data }: { data?: ContactContent }) {
               <>
               {status === "error" && (
                 <div className="mb-4 px-4 py-3 rounded-xl text-sm"
-                  style={{ backgroundColor: "rgba(183,28,28,0.08)", border: "1px solid rgba(183,28,28,0.25)", color: "#B71C1C", fontFamily: "var(--font-body)" }}>
+                  style={{ backgroundColor: "color-mix(in srgb, var(--color-brand-primary) 8%, transparent)", border: "1px solid color-mix(in srgb, var(--color-brand-primary) 25%, transparent)", color: "var(--color-brand-primary)", fontFamily: "var(--font-body)" }}>
                   Ocurrió un error al enviar. Inténtalo de nuevo o escríbenos a{" "}
                   <a href="mailto:contacto@rectrackmarketingdigital.com" style={{ fontWeight: 600, textDecoration: "underline" }}>contacto@rectrackmarketingdigital.com</a>.
                 </div>
@@ -431,7 +431,7 @@ export default function Contact({ data }: { data?: ContactContent }) {
                         fontSize: "0.7rem",
                       }}
                     >
-                      Nombre<span style={{ color: "#B71C1C" }}>*</span>
+                      Nombre<span style={{ color: "var(--color-brand-primary)" }}>*</span>
                     </label>
                     <input
                       id="contact-name"
@@ -451,7 +451,7 @@ export default function Contact({ data }: { data?: ContactContent }) {
                       <p
                         id="error-name"
                         className="mt-1.5 text-xs font-body"
-                        style={{ color: "#B71C1C", fontFamily: "var(--font-body)" }}
+                        style={{ color: "var(--color-brand-primary)", fontFamily: "var(--font-body)" }}
                         role="alert"
                       >
                         {errors.name}
@@ -472,7 +472,7 @@ export default function Contact({ data }: { data?: ContactContent }) {
                         fontSize: "0.7rem",
                       }}
                     >
-                      Correo Electrónico <span style={{ color: "#B71C1C" }}>*</span>
+                      Correo Electrónico <span style={{ color: "var(--color-brand-primary)" }}>*</span>
                     </label>
                     <input
                       id="contact-email"
@@ -492,7 +492,7 @@ export default function Contact({ data }: { data?: ContactContent }) {
                       <p
                         id="error-email"
                         className="mt-1.5 text-xs font-body"
-                        style={{ color: "#B71C1C", fontFamily: "var(--font-body)" }}
+                        style={{ color: "var(--color-brand-primary)", fontFamily: "var(--font-body)" }}
                         role="alert"
                       >
                         {errors.email}
@@ -514,7 +514,7 @@ export default function Contact({ data }: { data?: ContactContent }) {
                       fontSize: "0.7rem",
                     }}
                   >
-                    Teléfono <span style={{ color: "#B71C1C" }}>*</span>
+                    Teléfono <span style={{ color: "var(--color-brand-primary)" }}>*</span>
                   </label>
                   <div className="flex gap-2">
                     <select
@@ -559,7 +559,7 @@ export default function Contact({ data }: { data?: ContactContent }) {
                     <p
                       id="error-phone"
                       className="mt-1.5 text-xs font-body"
-                      style={{ color: "#B71C1C", fontFamily: "var(--font-body)" }}
+                      style={{ color: "var(--color-brand-primary)", fontFamily: "var(--font-body)" }}
                       role="alert"
                     >
                       {errors.phone}
@@ -582,7 +582,7 @@ export default function Contact({ data }: { data?: ContactContent }) {
                         fontSize: "0.7rem",
                       }}
                     >
-                      Entidad <span style={{ color: "#B71C1C" }}>*</span>
+                      Entidad <span style={{ color: "var(--color-brand-primary)" }}>*</span>
                     </label>
                     <select
                       id="contact-state"
@@ -606,7 +606,7 @@ export default function Contact({ data }: { data?: ContactContent }) {
                       <p
                         id="error-state"
                         className="mt-1.5 text-xs font-body"
-                        style={{ color: "#B71C1C", fontFamily: "var(--font-body)" }}
+                        style={{ color: "var(--color-brand-primary)", fontFamily: "var(--font-body)" }}
                         role="alert"
                       >
                         {errors.state}
@@ -699,7 +699,7 @@ export default function Contact({ data }: { data?: ContactContent }) {
                       style={{
                         fontFamily: "var(--font-body)",
                         fontWeight: 600,
-                        color: "#B71C1C",
+                        color: "var(--color-brand-primary)",
                         letterSpacing: "0.08em",
                         fontSize: "0.7rem",
                       }}
@@ -720,7 +720,7 @@ export default function Contact({ data }: { data?: ContactContent }) {
                           }}
                         >
                           <svg viewBox="0 0 16 16" fill="none" className="w-3.5 h-3.5" aria-hidden="true">
-                            <path d="M3 8.5l3 3 7-7" stroke="#B71C1C" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                            <path d="M3 8.5l3 3 7-7" stroke="var(--color-brand-primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                           </svg>
                           {srv}
                         </span>

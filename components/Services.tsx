@@ -28,7 +28,7 @@ const defaultServices: Service[] = [
       "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=900&q=80",
     icon: (
       <svg {...iconProps}>
-        <path d="M9 8l-4 4 4 4M15 8l4 4-4 4" stroke="#ff6b6b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M9 8l-4 4 4 4M15 8l4 4-4 4" stroke="var(--color-brand-coral)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     ),
   },
@@ -40,8 +40,8 @@ const defaultServices: Service[] = [
       "https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&w=900&q=80",
     icon: (
       <svg {...iconProps}>
-        <rect x="3" y="6" width="13" height="12" rx="2" stroke="#ff6b6b" strokeWidth="2" />
-        <path d="M16 10l5-3v10l-5-3v-4z" stroke="#ff6b6b" strokeWidth="2" strokeLinejoin="round" />
+        <rect x="3" y="6" width="13" height="12" rx="2" stroke="var(--color-brand-coral)" strokeWidth="2" />
+        <path d="M16 10l5-3v10l-5-3v-4z" stroke="var(--color-brand-coral)" strokeWidth="2" strokeLinejoin="round" />
       </svg>
     ),
   },
@@ -53,8 +53,8 @@ const defaultServices: Service[] = [
       "https://images.unsplash.com/photo-1452587925148-ce544e77e70d?auto=format&fit=crop&w=900&q=80",
     icon: (
       <svg {...iconProps}>
-        <path d="M4 8h3l2-2h6l2 2h3v11H4V8z" stroke="#ff6b6b" strokeWidth="2" strokeLinejoin="round" />
-        <circle cx="12" cy="13" r="3.5" stroke="#ff6b6b" strokeWidth="2" />
+        <path d="M4 8h3l2-2h6l2 2h3v11H4V8z" stroke="var(--color-brand-coral)" strokeWidth="2" strokeLinejoin="round" />
+        <circle cx="12" cy="13" r="3.5" stroke="var(--color-brand-coral)" strokeWidth="2" />
       </svg>
     ),
   },
@@ -66,7 +66,7 @@ const defaultServices: Service[] = [
       "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=900&q=80",
     icon: (
       <svg {...iconProps}>
-        <path d="M4 19V5M4 19h16M8 16v-4M12 16V8M16 16v-6M20 16v-2" stroke="#ff6b6b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M4 19V5M4 19h16M8 16v-4M12 16V8M16 16v-6M20 16v-2" stroke="var(--color-brand-coral)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     ),
   },
@@ -132,7 +132,7 @@ function ServiceCard({
       {/* Red top accent bar */}
       <div
         className="absolute top-0 left-0 right-0 h-1 z-20"
-        style={{ backgroundColor: "#B71C1C" }}
+        style={{ backgroundColor: "var(--color-brand-primary)" }}
       />
 
       {/* Title — always visible at the bottom */}
@@ -142,7 +142,7 @@ function ServiceCard({
             fontFamily: "var(--font-display)",
             fontSize: "1.45rem",
             fontWeight: 800,
-            color: "#ffffff",
+            color: "var(--color-on-brand)",
             lineHeight: 1.15,
             textShadow: "0 2px 12px rgba(0,0,0,0.6)",
           }}
@@ -151,7 +151,7 @@ function ServiceCard({
         </h3>
         <div
           className="mt-3 h-0.5 w-10 group-hover:w-16 transition-all duration-500"
-          style={{ backgroundColor: "#B71C1C" }}
+          style={{ backgroundColor: "var(--color-brand-primary)" }}
         />
       </div>
 
@@ -168,8 +168,8 @@ function ServiceCard({
         <div
           className="w-12 h-12 rounded-xl flex items-center justify-center mb-5"
           style={{
-            background: "rgba(183,28,28,0.18)",
-            border: "1px solid rgba(255,107,107,0.35)",
+            background: "color-mix(in srgb, var(--color-brand-primary) 18%, transparent)",
+            border: "1px solid color-mix(in srgb, var(--color-brand-coral) 35%, transparent)",
           }}
         >
           {service.icon}
@@ -180,7 +180,7 @@ function ServiceCard({
             fontFamily: "var(--font-display)",
             fontSize: "1.4rem",
             fontWeight: 800,
-            color: "#ffffff",
+            color: "var(--color-on-brand)",
             lineHeight: 1.15,
           }}
         >
@@ -192,7 +192,7 @@ function ServiceCard({
             fontFamily: "var(--font-body)",
             fontSize: "0.95rem",
             fontWeight: 600,
-            color: "#ffffff",
+            color: "var(--color-on-brand)",
             lineHeight: 1.5,
           }}
         >
@@ -216,7 +216,7 @@ function ServiceCard({
               fontFamily: "var(--font-display)",
               fontWeight: 700,
               fontSize: "0.875rem",
-              color: "#ff6b6b",
+              color: "var(--color-brand-coral)",
             }}
           >
             Saber más
@@ -230,7 +230,7 @@ function ServiceCard({
           >
             <path
               d="M3 8h10M9 4l4 4-4 4"
-              stroke="#ff6b6b"
+              stroke="var(--color-brand-coral)"
               strokeWidth="1.8"
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -266,13 +266,13 @@ export default function Services({ data }: { data?: ServicesContent }) {
           }}
         >
           <div className="flex items-center gap-2 mb-4">
-            <div className="w-8 h-0.5" style={{ backgroundColor: "#B71C1C" }} />
+            <div className="w-8 h-0.5" style={{ backgroundColor: "var(--color-brand-primary)" }} />
             <span
               className="text-xs uppercase tracking-widest font-body"
               style={{
                 fontFamily: "var(--font-body)",
                 fontWeight: 500,
-                color: "#B71C1C",
+                color: "var(--color-brand-primary)",
                 letterSpacing: "0.15em",
               }}
             >
@@ -291,7 +291,7 @@ export default function Services({ data }: { data?: ServicesContent }) {
               letterSpacing: "-0.02em",
             }}
           >
-            {heading.split('. ').map((part, i, arr) => i === arr.length - 1 ? <span key={i} style={{ color: "#B71C1C" }}>{part}</span> : <span key={i}>{part}. </span>)}
+            {heading.split('. ').map((part, i, arr) => i === arr.length - 1 ? <span key={i} style={{ color: "var(--color-brand-primary)" }}>{part}</span> : <span key={i}>{part}. </span>)}
           </h2>
 
           <p

@@ -147,7 +147,7 @@ export default function Hero({ data }: { data?: HeroContent }) {
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: "radial-gradient(ellipse 80% 70% at 70% 50%, rgba(183,28,28,0.10) 0%, transparent 70%)",
+          background: "radial-gradient(ellipse 80% 70% at 70% 50%, color-mix(in srgb, var(--color-brand-primary) 10%, transparent) 0%, transparent 70%)",
         }}
         aria-hidden="true"
       />
@@ -166,7 +166,7 @@ export default function Hero({ data }: { data?: HeroContent }) {
       <div
         className="absolute -bottom-40 -left-32 w-[500px] h-[500px] rounded-full pointer-events-none"
         style={{
-          background: "radial-gradient(circle, rgba(127,0,0,0.08) 0%, transparent 70%)",
+          background: "radial-gradient(circle, color-mix(in srgb, var(--color-brand-deep) 8%, transparent) 0%, transparent 70%)",
           animationName:           mounted ? "floatBlob" : "none",
           animationDuration:       "15s",
           animationTimingFunction: "ease-in-out",
@@ -200,7 +200,7 @@ export default function Hero({ data }: { data?: HeroContent }) {
                 className="inline-flex items-center gap-2 px-3 py-1 rounded-full border"
                 style={{ borderColor: "var(--color-brand-red-border)", backgroundColor: "var(--color-brand-red-bg)" }}
               >
-                <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: "#B71C1C", boxShadow: "0 0 6px #B71C1C" }} />
+                <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: "var(--color-brand-primary)", boxShadow: "0 0 6px var(--color-brand-primary)" }} />
                 <span style={{ fontFamily: "var(--font-body)", fontWeight: 500, fontSize: "0.65rem", color: "var(--color-brand-light)", letterSpacing: "0.18em", textTransform: "uppercase" }}>{eyebrow}</span>
               </span>
             </div>
@@ -223,7 +223,7 @@ export default function Hero({ data }: { data?: HeroContent }) {
             <button
               onClick={() => handleScrollTo("contact")}
               className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-white"
-              style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "0.95rem", background: "linear-gradient(135deg, #B71C1C 0%, #7F0000 100%)", boxShadow: "0 4px 20px rgba(183,28,28,0.4)", opacity: mounted ? 1 : 0, transform: mounted ? "translateY(0)" : "translateY(10px)", transition: "opacity 0.5s ease 0.7s, transform 0.5s ease 0.7s" }}
+              style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "0.95rem", background: "linear-gradient(135deg, var(--color-brand-primary) 0%, var(--color-brand-deep) 100%)", boxShadow: "0 4px 20px color-mix(in srgb, var(--color-brand-primary) 40%, transparent)", opacity: mounted ? 1 : 0, transform: mounted ? "translateY(0)" : "translateY(10px)", transition: "opacity 0.5s ease 0.7s, transform 0.5s ease 0.7s" }}
             >
               {ctaPrimary}
               <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
@@ -264,8 +264,8 @@ export default function Hero({ data }: { data?: HeroContent }) {
               <svg viewBox="0 0 320 320" className="w-full h-full -rotate-90">
                 <defs>
                   <linearGradient id="orbitGradMob" x1="0" y1="0" x2="1" y2="1">
-                    <stop offset="0%" stopColor="#2A2A2A" />
-                    <stop offset="100%" stopColor="#0D0D0D" />
+                    <stop offset="0%" stopColor="var(--color-ink)" />
+                    <stop offset="100%" stopColor="var(--color-text)" />
                   </linearGradient>
                 </defs>
                 <circle cx="160" cy="160" r="130" fill="none" stroke="var(--color-border-soft)" strokeWidth="1.5" strokeDasharray="1 9" strokeLinecap="round" />
@@ -283,18 +283,18 @@ export default function Hero({ data }: { data?: HeroContent }) {
                   return (
                     <g key={s.title} className="cursor-pointer" onClick={() => setActive(i)} style={{ transition: "all 0.4s ease" }}>
                       {(current || done) && (
-                        <circle cx={cx} cy={cy} r={current ? 14 : 12} fill="none" stroke="#FF5252" strokeWidth="1" opacity="0.35" style={{ animation: "nodeAppear 0.3s ease 0.45s both" }}>
+                        <circle cx={cx} cy={cy} r={current ? 14 : 12} fill="none" stroke="var(--color-brand-bright)" strokeWidth="1" opacity="0.35" style={{ animation: "nodeAppear 0.3s ease 0.45s both" }}>
                           {current && (<><animate attributeName="r" from="14" to="26" dur="1.8s" begin="0.45s" repeatCount="indefinite" /><animate attributeName="opacity" from="0.45" to="0" dur="1.8s" begin="0.45s" repeatCount="indefinite" /></>)}
                         </circle>
                       )}
                       <circle cx={cx} cy={cy} r={current ? 14 : done ? 12 : 4.5}
-                        fill={current ? "#FF5252" : done ? "#B71C1C" : "var(--color-surface)"}
+                        fill={current ? "var(--color-brand-bright)" : done ? "var(--color-brand-primary)" : "var(--color-surface)"}
                         stroke={current || done ? "transparent" : "var(--color-brand-red-border)"} strokeWidth="1.5"
-                        style={{ transition: "r 0.3s cubic-bezier(0.34,1.56,0.64,1) 0.45s, fill 0.25s ease 0.45s", filter: current ? "drop-shadow(0 0 9px rgba(255,82,82,0.8))" : "none" }}
+                        style={{ transition: "r 0.3s cubic-bezier(0.34,1.56,0.64,1) 0.45s, fill 0.25s ease 0.45s", filter: current ? "drop-shadow(0 0 9px color-mix(in srgb, var(--color-brand-bright) 80%, transparent))" : "none" }}
                       />
                       {(current || done) && (
                         <text x={cx} y={cy} transform={`rotate(90 ${cx} ${cy})`} textAnchor="middle" dominantBaseline="central"
-                          style={{ fontFamily: "var(--font-display)", fontSize: current ? "13px" : "11px", fontWeight: 800, fill: "#fff", pointerEvents: "none", animation: "nodeAppear 0.3s ease 0.45s both" }}>
+                          style={{ fontFamily: "var(--font-display)", fontSize: current ? "13px" : "11px", fontWeight: 800, fill: "var(--color-on-brand)", pointerEvents: "none", animation: "nodeAppear 0.3s ease 0.45s both" }}>
                           {i + 1}
                         </text>
                       )}
@@ -304,12 +304,12 @@ export default function Hero({ data }: { data?: HeroContent }) {
               </svg>
 
               <div className="absolute left-1/2 top-1/2 rounded-full pointer-events-none" aria-hidden="true"
-                style={{ width: "70%", height: "70%", transform: "translate(-50%, -50%)", background: "radial-gradient(circle, rgba(255,82,82,0.20) 0%, rgba(255,82,82,0.10) 35%, transparent 68%)", filter: "blur(24px)", animation: mounted ? "softGlow 5s ease-in-out infinite" : "none" }}
+                style={{ width: "70%", height: "70%", transform: "translate(-50%, -50%)", background: "radial-gradient(circle, color-mix(in srgb, var(--color-brand-bright) 20%, transparent) 0%, color-mix(in srgb, var(--color-brand-bright) 10%, transparent) 35%, transparent 68%)", filter: "blur(24px)", animation: mounted ? "softGlow 5s ease-in-out infinite" : "none" }}
               />
 
               <div key={`mob-${active}`} className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none" style={{ padding: "0 18%" }}>
                 <div className="flex items-center justify-center rounded-full"
-                  style={{ width: isFinal ? "58px" : "68px", height: isFinal ? "58px" : "68px", marginBottom: isFinal ? "0.6rem" : "0.9rem", color: "#fff", background: "linear-gradient(135deg, #FF5252 0%, #B71C1C 50%, #7F0000 100%)", boxShadow: isFinal ? "0 0 32px rgba(255,82,82,0.6)" : "0 12px 28px rgba(127,0,0,0.40)", transition: "all 0.5s ease", animation: "stepIn 0.55s cubic-bezier(0.22,1,0.36,1) 0.02s both" }}>
+                  style={{ width: isFinal ? "58px" : "68px", height: isFinal ? "58px" : "68px", marginBottom: isFinal ? "0.6rem" : "0.9rem", color: "var(--color-on-brand)", background: "linear-gradient(135deg, var(--color-brand-bright) 0%, var(--color-brand-primary) 50%, var(--color-brand-deep) 100%)", boxShadow: isFinal ? "0 0 32px color-mix(in srgb, var(--color-brand-bright) 60%, transparent)" : "0 12px 28px color-mix(in srgb, var(--color-brand-deep) 40%, transparent)", transition: "all 0.5s ease", animation: "stepIn 0.55s cubic-bezier(0.22,1,0.36,1) 0.02s both" }}>
                   <div className={isFinal ? "scale-[1.3]" : "scale-[1.3]"}>{step.icon}</div>
                 </div>
                 <span className="font-display" style={{ fontFamily: "var(--font-display)", fontSize: "0.58rem", fontWeight: 800, color: "var(--color-dim)", letterSpacing: "0.25em", animation: "stepIn 0.55s cubic-bezier(0.22,1,0.36,1) 0.09s both" }}>
@@ -323,7 +323,7 @@ export default function Hero({ data }: { data?: HeroContent }) {
                 </p>
                 {isFinal && (
                   <button onClick={() => handleScrollTo("contact")} className="group pointer-events-auto inline-flex items-center gap-1.5 mt-3 px-4 py-2 rounded-full"
-                    style={{ fontFamily: "var(--font-display)", fontSize: "0.75rem", fontWeight: 700, color: "#fff", background: "linear-gradient(135deg, #B71C1C 0%, #7F0000 100%)", boxShadow: "0 8px 22px rgba(183,28,28,0.5)", animation: "stepIn 0.55s cubic-bezier(0.22,1,0.36,1) 0.3s both, ctaPulse 1.7s ease-in-out 1s infinite" }}>
+                    style={{ fontFamily: "var(--font-display)", fontSize: "0.75rem", fontWeight: 700, color: "var(--color-on-brand)", background: "linear-gradient(135deg, var(--color-brand-primary) 0%, var(--color-brand-deep) 100%)", boxShadow: "0 8px 22px color-mix(in srgb, var(--color-brand-primary) 50%, transparent)", animation: "stepIn 0.55s cubic-bezier(0.22,1,0.36,1) 0.3s both, ctaPulse 1.7s ease-in-out 1s infinite" }}>
                     Empezar mi proyecto
                     <svg viewBox="0 0 16 16" fill="none" className="w-3.5 h-3.5"><path d="M3 8h10M9 4l4 4-4 4" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
                   </button>
@@ -357,7 +357,7 @@ export default function Hero({ data }: { data?: HeroContent }) {
               >
                 <span
                   className="w-1.5 h-1.5 rounded-full"
-                  style={{ backgroundColor: "#B71C1C", boxShadow: "0 0 6px #B71C1C" }}
+                  style={{ backgroundColor: "var(--color-brand-primary)", boxShadow: "0 0 6px var(--color-brand-primary)" }}
                 />
                 <span
                   style={{
@@ -439,8 +439,8 @@ export default function Hero({ data }: { data?: HeroContent }) {
                   fontFamily: "var(--font-display)",
                   fontWeight: 700,
                   fontSize: "clamp(0.85rem, 3.5vw, 1.05rem)",
-                  background: "linear-gradient(135deg, #B71C1C 0%, #7F0000 100%)",
-                  boxShadow: "0 4px 24px rgba(183,28,28,0.4)",
+                  background: "linear-gradient(135deg, var(--color-brand-primary) 0%, var(--color-brand-deep) 100%)",
+                  boxShadow: "0 4px 24px color-mix(in srgb, var(--color-brand-primary) 40%, transparent)",
                 }}
               >
                 {ctaPrimary}
@@ -521,8 +521,8 @@ export default function Hero({ data }: { data?: HeroContent }) {
               <svg viewBox="0 0 320 320" className="w-full h-full -rotate-90">
                 <defs>
                   <linearGradient id="orbitGrad" x1="0" y1="0" x2="1" y2="1">
-                    <stop offset="0%" stopColor="#2A2A2A" />
-                    <stop offset="100%" stopColor="#0D0D0D" />
+                    <stop offset="0%" stopColor="var(--color-ink)" />
+                    <stop offset="100%" stopColor="var(--color-text)" />
                   </linearGradient>
                 </defs>
 
@@ -569,7 +569,7 @@ export default function Hero({ data }: { data?: HeroContent }) {
                     >
                       {(current || done) && (
                         <circle
-                          cx={cx} cy={cy} r={current ? 14 : 12} fill="none" stroke="#FF5252" strokeWidth="1" opacity="0.35"
+                          cx={cx} cy={cy} r={current ? 14 : 12} fill="none" stroke="var(--color-brand-bright)" strokeWidth="1" opacity="0.35"
                           style={{ animation: "nodeAppear 0.3s ease 0.45s both" }}
                         >
                           {current && (
@@ -583,12 +583,12 @@ export default function Hero({ data }: { data?: HeroContent }) {
                       <circle
                         cx={cx} cy={cy}
                         r={current ? 14 : done ? 12 : 4.5}
-                        fill={current ? "#FF5252" : done ? "#B71C1C" : "var(--color-surface)"}
+                        fill={current ? "var(--color-brand-bright)" : done ? "var(--color-brand-primary)" : "var(--color-surface)"}
                         stroke={current || done ? "transparent" : "var(--color-brand-red-border)"}
                         strokeWidth="1.5"
                         style={{
                           transition: "r 0.3s cubic-bezier(0.34,1.56,0.64,1) 0.45s, fill 0.25s ease 0.45s",
-                          filter: current ? "drop-shadow(0 0 9px rgba(255,82,82,0.8))" : "none",
+                          filter: current ? "drop-shadow(0 0 9px color-mix(in srgb, var(--color-brand-bright) 80%, transparent))" : "none",
                         }}
                       />
                       {(current || done) && (
@@ -601,7 +601,7 @@ export default function Hero({ data }: { data?: HeroContent }) {
                             fontFamily: "var(--font-display)",
                             fontSize: current ? "13px" : "11px",
                             fontWeight: 800,
-                            fill: "#fff",
+                            fill: "var(--color-on-brand)",
                             pointerEvents: "none",
                             animation: "nodeAppear 0.3s ease 0.45s both",
                           }}
@@ -622,7 +622,7 @@ export default function Hero({ data }: { data?: HeroContent }) {
                   width: "340px",
                   height: "340px",
                   transform: "translate(-50%, -50%)",
-                  background: "radial-gradient(circle, rgba(255,82,82,0.20) 0%, rgba(255,82,82,0.10) 35%, transparent 68%)",
+                  background: "radial-gradient(circle, color-mix(in srgb, var(--color-brand-bright) 20%, transparent) 0%, color-mix(in srgb, var(--color-brand-bright) 10%, transparent) 35%, transparent 68%)",
                   filter: "blur(34px)",
                   animation: mounted ? "softGlow 5s ease-in-out infinite" : "none",
                 }}
@@ -639,11 +639,11 @@ export default function Hero({ data }: { data?: HeroContent }) {
                     width: isFinal ? "78px" : "92px",
                     height: isFinal ? "78px" : "92px",
                     marginBottom: isFinal ? "1rem" : "1.75rem",
-                    color: "#fff",
-                    background: "linear-gradient(135deg, #FF5252 0%, #B71C1C 50%, #7F0000 100%)",
+                    color: "var(--color-on-brand)",
+                    background: "linear-gradient(135deg, var(--color-brand-bright) 0%, var(--color-brand-primary) 50%, var(--color-brand-deep) 100%)",
                     boxShadow: isFinal
-                      ? "0 0 44px rgba(255,82,82,0.6)"
-                      : "0 18px 38px rgba(127,0,0,0.40)",
+                      ? "0 0 44px color-mix(in srgb, var(--color-brand-bright) 60%, transparent)"
+                      : "0 18px 38px color-mix(in srgb, var(--color-brand-deep) 40%, transparent)",
                     transition: "all 0.5s ease",
                     animation: "stepIn 0.55s cubic-bezier(0.22,1,0.36,1) 0.02s both",
                   }}
@@ -700,9 +700,9 @@ export default function Hero({ data }: { data?: HeroContent }) {
                       fontFamily: "var(--font-display)",
                       fontSize: "0.85rem",
                       fontWeight: 700,
-                      color: "#fff",
-                      background: "linear-gradient(135deg, #B71C1C 0%, #7F0000 100%)",
-                      boxShadow: "0 10px 28px rgba(183,28,28,0.5)",
+                      color: "var(--color-on-brand)",
+                      background: "linear-gradient(135deg, var(--color-brand-primary) 0%, var(--color-brand-deep) 100%)",
+                      boxShadow: "0 10px 28px color-mix(in srgb, var(--color-brand-primary) 50%, transparent)",
                       animation:
                         "stepIn 0.55s cubic-bezier(0.22,1,0.36,1) 0.3s both, ctaPulse 1.7s ease-in-out 1s infinite",
                     }}
