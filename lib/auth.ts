@@ -1,8 +1,7 @@
-import { createHmac, timingSafeEqual } from "crypto";
-import { NextRequest } from "next/server";
+import type { NextRequest } from "next/server";
 
 const SESSION_COOKIE = "admin_session";
-const SESSION_MAX_AGE = 60 * 60 * 8; // 8 hours
+const SESSION_MAX_AGE = 60 * 60 * 8;
 
 function getSecret(): string {
   const s = process.env.ADMIN_SECRET;
@@ -16,51 +15,68 @@ function getPassword(): string {
   return p;
 }
 
-function sign(payload: string): string {
-  return createHmac("sha256", getSecret()).update(payload).digest("hex");
+async function importKey(): Promise<CryptoKey> {
+  return crypto.subtle.importKey(
+    "raw",
+    new TextEncoder().encode(getSecret()),
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign", "verify"]
+  );
 }
 
-/** Creates a signed token. Returns the raw token string. */
-export function createToken(): string {
+function uint8ToHex(buf: ArrayBuffer): string {
+  return Array.from(new Uint8Array(buf))
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+}
+
+function hexToUint8(hex: string): Uint8Array {
+  const arr = new Uint8Array(hex.length / 2);
+  for (let i = 0; i < arr.length; i++) arr[i] = parseInt(hex.slice(i * 2, i * 2 + 2), 16);
+  return arr;
+}
+
+function base64urlEncode(str: string): string {
+  return btoa(str).replace(/\+/g, "-").replace(/\//g, "_").replace(/=/g, "");
+}
+
+function base64urlDecode(b64url: string): string {
+  const b64 = b64url.replace(/-/g, "+").replace(/_/g, "/");
+  return atob(b64.padEnd(b64.length + (4 - (b64.length % 4)) % 4, "="));
+}
+
+export async function createToken(): Promise<string> {
   const payload = `admin:${Date.now()}`;
-  const sig = sign(payload);
-  return Buffer.from(`${payload}.${sig}`).toString("base64url");
+  const key = await importKey();
+  const sig = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(payload));
+  return base64urlEncode(`${payload}.${uint8ToHex(sig)}`);
 }
 
-/** Verifies a token signature. Returns true if valid. */
-export function verifyToken(token: string): boolean {
+export async function verifyToken(token: string): Promise<boolean> {
   try {
-    const decoded = Buffer.from(token, "base64url").toString("utf-8");
+    const decoded = base64urlDecode(token);
     const lastDot = decoded.lastIndexOf(".");
     if (lastDot === -1) return false;
     const payload = decoded.slice(0, lastDot);
     const sig = decoded.slice(lastDot + 1);
-    const expected = sign(payload);
-    const a = Buffer.from(sig);
-    const b = Buffer.from(expected);
-    if (a.length !== b.length) return false;
-    return timingSafeEqual(a, b);
+    const key = await importKey();
+    return crypto.subtle.verify("HMAC", key, hexToUint8(sig), new TextEncoder().encode(payload));
   } catch {
     return false;
   }
 }
 
-/** Compare submitted password against the env var (constant-time). */
-export function checkPassword(submitted: string): boolean {
+export async function checkPassword(submitted: string): Promise<boolean> {
   const pw = getPassword();
-  try {
-    if (submitted.length !== pw.length) return false;
-    const a = Buffer.from(submitted);
-    const b = Buffer.from(pw);
-    return timingSafeEqual(a, b);
-  } catch {
-    return false;
-  }
+  if (submitted.length !== pw.length) return false;
+  const a = new TextEncoder().encode(submitted);
+  const b = new TextEncoder().encode(pw);
+  let diff = 0;
+  for (let i = 0; i < a.length; i++) diff |= a[i] ^ b[i];
+  return diff === 0;
 }
 
-// ── Cookie helpers (for same-origin / SSR use) ───────────────────────────────
-
-/** Appends a Set-Cookie header with the session token. */
 export function setSessionCookie(res: Response, token: string): Response {
   res.headers.append(
     "Set-Cookie",
@@ -69,7 +85,6 @@ export function setSessionCookie(res: Response, token: string): Response {
   return res;
 }
 
-/** Clears the session cookie. */
 export function clearSessionCookie(res: Response): Response {
   res.headers.append(
     "Set-Cookie",
@@ -78,29 +93,16 @@ export function clearSessionCookie(res: Response): Response {
   return res;
 }
 
-// ── Token extraction ─────────────────────────────────────────────────────────
-
-/** Extracts the Bearer token from the Authorization header. */
 function extractBearerToken(req: NextRequest): string | null {
   const auth = req.headers.get("authorization") ?? req.headers.get("Authorization");
-  if (!auth || !auth.startsWith("Bearer ")) return null;
+  if (!auth?.startsWith("Bearer ")) return null;
   return auth.slice(7).trim() || null;
 }
 
-/**
- * Checks authentication from a request.
- * Accepts either:
- *   - Cookie: admin_session=<token>   (same-origin / server-rendered)
- *   - Authorization: Bearer <token>  (external panel / cross-origin)
- */
-export function isAuthenticatedRequest(req: NextRequest): boolean {
-  // 1. Try Bearer token (external panel)
+export async function isAuthenticatedRequest(req: NextRequest): Promise<boolean> {
   const bearer = extractBearerToken(req);
   if (bearer) return verifyToken(bearer);
-
-  // 2. Fall back to cookie (same-origin)
   const cookieToken = req.cookies.get(SESSION_COOKIE)?.value;
   if (cookieToken) return verifyToken(cookieToken);
-
   return false;
 }

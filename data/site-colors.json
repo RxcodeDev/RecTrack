@@ -1,0 +1,20 @@
+{
+  "brand-primary":     "#B71C1C",
+  "brand-accent":      "#D32F2F",
+  "brand-deep":        "#7F0000",
+  "brand-glow":        "#EF5350",
+  "brand-light":       "#C62828",
+  "bg":                "#F8F7F5",
+  "surface":           "#FFFFFF",
+  "raised":            "#F0EEEC",
+  "high":              "#E5E3E0",
+  "text":              "#0D0D0D",
+  "bg-overlay":        "rgba(248,247,245,0.96)",
+  "border":            "rgba(0,0,0,0.08)",
+  "border-soft":       "rgba(0,0,0,0.14)",
+  "muted":             "rgba(0,0,0,0.50)",
+  "dim":               "rgba(0,0,0,0.35)",
+  "faint":             "rgba(0,0,0,0.04)",
+  "brand-red-bg":      "rgba(183,28,28,0.08)",
+  "brand-red-border":  "rgba(183,28,28,0.25)"
+}

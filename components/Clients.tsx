@@ -36,7 +36,7 @@ export default function Clients({ data }: { data?: ClientsContent }) {
   }, []);
 
   return (
-    <section className="py-16 border-t border-b" style={{ backgroundColor: "var(--color-bg)", borderColor: "var(--color-border)" }}>
+    <section id="clients" className="py-16 border-t border-b" style={{ backgroundColor: "var(--color-bg)", borderColor: "var(--color-border)" }}>
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
 
         {/* Label */}

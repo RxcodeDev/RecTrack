@@ -81,7 +81,7 @@ function handleScrollTo(href: string) {
   if (el) el.scrollIntoView({ behavior: "smooth" });
 }
 
-export default function Footer({ data }: { data?: FooterContent }) {
+export default function Footer({ data, logoUrl = "/logos/transparente.png" }: { data?: FooterContent; logoUrl?: string }) {
   const year = new Date().getFullYear();
   const tagline = data?.tagline ?? "Impulsando marcas que generan cambios.";
   const footerEmail = data?.email ?? "contacto@rectrackmarketingdigital.com";
@@ -95,7 +95,7 @@ export default function Footer({ data }: { data?: FooterContent }) {
   const liveLegalLinks = data?.legalLinks ?? legalLinks;
 
   return (
-    <footer className="" role="contentinfo" style={{ backgroundColor: "var(--color-bg)" }}>
+    <footer id="footer" className="" role="contentinfo" style={{ backgroundColor: "var(--color-bg)" }}>
       {/* Top border in brand-subtle */}
       <div className="h-px w-full" style={{ backgroundColor: "var(--color-brand-red-bg)" }} />
 
@@ -112,11 +112,12 @@ export default function Footer({ data }: { data?: FooterContent }) {
               aria-label="Volver al inicio"
             >
               <Image
-                src="/logos/transparente.png"
+                src={logoUrl}
                 alt="ReckTrack Marketing Digital"
                 width={160}
                 height={48}
                 className="h-10 w-auto object-contain"
+                unoptimized={logoUrl.startsWith("/uploads/")}
               />
             </button>
 

@@ -7,14 +7,16 @@ import Portfolio from "@/components/Portfolio";
 import Testimonials from "@/components/Testimonials";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
-import { readContent } from "@/lib/content";
+import { readContent, readLogos } from "@/lib/content";
 
 export default async function Home() {
   const content = await readContent();
+  const logos = await readLogos();
+  const logoUrl = logos.logo_url || "/logos/transparente.png";
 
   return (
     <main className="overflow-x-hidden">
-      <Navbar    data={content.navbar} />
+      <Navbar    data={content.navbar} logoUrl={logoUrl} />
       <Hero      data={content.hero} />
       <Clients   data={content.clients} />
       <Services  data={content.services} />
@@ -22,7 +24,7 @@ export default async function Home() {
       <Portfolio data={content.portfolio} />
       <Testimonials data={content.testimonials} />
       <Contact   data={content.contact} />
-      <Footer    data={content.footer} />
+      <Footer    data={content.footer} logoUrl={logoUrl} />
     </main>
   );
 }

@@ -22,18 +22,14 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Contraseña requerida." }, { status: 400, headers: cors });
     }
 
-    if (!checkPassword(password)) {
-      // Slight delay to discourage brute-force
+    if (!await checkPassword(password)) {
       await new Promise((r) => setTimeout(r, 400));
       return NextResponse.json({ error: "Contraseña incorrecta." }, { status: 401, headers: cors });
     }
 
-    const token = createToken();
+    const token = await createToken();
 
-    // Return token in body → external panel stores it and sends as Bearer
     const res = NextResponse.json({ ok: true, token }, { headers: cors });
-
-    // Also set cookie → same-origin / SSR fallback
     setSessionCookie(res, token);
     return res;
   } catch {

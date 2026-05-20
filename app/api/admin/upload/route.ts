@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
     const buffer = Buffer.from(bytes);
     await fs.writeFile(path.join(destDir, safeName), buffer);
 
-    return NextResponse.json({ url: `/${folder}/${safeName}` }, { headers: cors });
+    return NextResponse.json({ path: `/${folder}/${safeName}` }, { headers: cors });
   } catch {
     return NextResponse.json({ error: "Error al subir el archivo." }, { status: 500, headers: cors });
   }

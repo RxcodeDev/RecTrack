@@ -4,11 +4,10 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import type { NavbarContent } from "@/lib/content";
 
-function ReckTrackLogo({ className = "" }: { className?: string }) {
+function ReckTrackLogo({ src, className = "" }: { src: string; className?: string }) {
   return (
-    // Logo del nav. Reemplaza el src por tu imagen en /public/logos/.
     <img
-      src="/logos/transparente.png"
+      src={src}
       alt="ReckTrack Marketing Digital"
       className={className}
       style={{ height: 44, width: "auto", objectFit: "contain", userSelect: "none" }}
@@ -23,7 +22,7 @@ const navLinks = [
   { label: "Contacto", href: "#contact" },
 ];
 
-export default function Navbar({ data }: { data?: NavbarContent }) {
+export default function Navbar({ data, logoUrl = "/logos/transparente.png" }: { data?: NavbarContent; logoUrl?: string }) {
   const whatsappNumber = data?.whatsappNumber ?? "523336154478";
   const whatsappMessage = data?.whatsappMessage ?? "Hola%2C%20me%20interesa%20cotizar%20un%20proyecto%20con%20ReckTrack%20Marketing%20Digital.";
   const [scrolled,     setScrolled]     = useState(false);
@@ -59,6 +58,7 @@ export default function Navbar({ data }: { data?: NavbarContent }) {
 
   return (
     <header
+      id="navbar"
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         scrolled
           ? "backdrop-blur-xl border-b"
@@ -75,7 +75,7 @@ export default function Navbar({ data }: { data?: NavbarContent }) {
             className="flex items-center gap-2 group"
             aria-label="ReckTrack MD — Inicio"
           >
-            <ReckTrackLogo />
+            <ReckTrackLogo src={logoUrl} />
           </Link>
 
           {/* ── Desktop nav links ──────────────────────────────────── */}
@@ -135,10 +135,15 @@ export default function Navbar({ data }: { data?: NavbarContent }) {
 
       {/* ── Mobile dropdown ─────────────────────────────────────────── */}
       <div
-        className={`md:hidden overflow-hidden transition-all duration-400 ease-in-out ${
-          menuOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
-        } backdrop-blur-xl border-b`}
-        style={{ backgroundColor: "var(--color-bg-overlay)", borderColor: "var(--color-border)" }}
+        className="md:hidden overflow-hidden backdrop-blur-xl border-b"
+        style={{
+          maxHeight: menuOpen ? "24rem" : "0",
+          opacity: menuOpen ? 1 : 0,
+          pointerEvents: menuOpen ? undefined : "none",
+          transition: "max-height 0.35s ease-in-out, opacity 0.25s ease-in-out",
+          backgroundColor: "var(--color-bg-overlay)",
+          borderColor: "var(--color-border)",
+        }}
       >
         <nav
           className="flex flex-col gap-1 px-6 py-4"

@@ -2,14 +2,35 @@ import { promises as fs } from "fs";
 import path from "path";
 
 const CONTENT_PATH = path.join(process.cwd(), "data", "site-content.json");
+const LOGOS_PATH = path.join(process.cwd(), "data", "site-logos.json");
+
+export interface SiteLogos {
+  logo_url?: string;
+  favicon_url?: string;
+}
+
+export async function readLogos(): Promise<SiteLogos> {
+  try {
+    const raw = await fs.readFile(LOGOS_PATH, "utf-8");
+    return JSON.parse(raw) as SiteLogos;
+  } catch {
+    return {};
+  }
+}
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
 export interface MetaContent {
   title: string;
   description: string;
+  keywords: string[];
   ogTitle: string;
   ogDescription: string;
+  ogImage: string;
+  canonicalUrl: string;
+  robots: string;
+  twitterCard: "summary" | "summary_large_image";
+  twitterSite: string;
 }
 
 export interface NavbarContent {
