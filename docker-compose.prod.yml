@@ -1,0 +1,50 @@
+# =============================================================================
+# RecTrack — Docker Compose para PRODUCCIÓN (con Traefik)
+# Uso: docker compose -f docker-compose.prod.yml up -d --build
+#
+# Requiere que Traefik ya esté corriendo con la red "traefik-public".
+#
+# Diferencias vs docker-compose.yml (local):
+#  - Sin puerto expuesto al host (Traefik maneja el enrutamiento)
+#  - Labels de Traefik: SSL automático vía Let's Encrypt
+#  - Red "traefik-public" externa para que Traefik descubra el servicio
+# =============================================================================
+
+services:
+  rectrack:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: rectrack
+    restart: unless-stopped
+    env_file:
+      - .env.local
+    environment:
+      NODE_ENV: production
+      NEXT_TELEMETRY_DISABLED: "1"
+    volumes:
+      - rectrack-data:/app/data
+      - rectrack-uploads:/app/public/uploads
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:3000/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    networks:
+      - traefik-public
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik-public"
+      - "traefik.http.routers.rectrack.rule=Host(`rectrackmarketingdigital.com.mx`)"
+      - "traefik.http.routers.rectrack.entrypoints=websecure"
+      - "traefik.http.routers.rectrack.tls.certresolver=letsencrypt"
+      - "traefik.http.services.rectrack.loadbalancer.server.port=3000"
+
+networks:
+  traefik-public:
+    external: true
+
+volumes:
+  rectrack-data:
+  rectrack-uploads:
