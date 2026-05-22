@@ -104,20 +104,23 @@ function ServiceCard({
   index: number;
   visible: boolean;
 }) {
+  const [hovered, setHovered] = useState(false);
   return (
     <article
-      className="group relative h-[28rem] rounded-2xl overflow-hidden cursor-pointer hover:-translate-y-2 hover:shadow-2xl transition-all duration-500"
+      className="relative h-[28rem] rounded-2xl overflow-hidden cursor-pointer"
       style={{
-        boxShadow: "0 2px 16px rgba(0,0,0,0.45)",
+        boxShadow: hovered ? "0 16px 48px rgba(0,0,0,0.55)" : "0 2px 16px rgba(0,0,0,0.45)",
         opacity: visible ? 1 : 0,
-        transform: visible ? "translateY(0)" : "translateY(32px)",
-        transition: `opacity 0.6s ease ${index * 0.12}s, transform 0.6s ease ${index * 0.12}s, box-shadow 0.4s ease, translate 0.4s ease`,
+        transform: visible ? (hovered ? "translateY(-8px)" : "translateY(0)") : "translateY(32px)",
+        transition: `opacity 0.6s ease ${index * 0.12}s, transform 0.6s ease ${index * 0.12}s, box-shadow 0.4s ease`,
       }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
     >
       {/* Background image */}
       <div
-        className="absolute inset-0 bg-cover bg-center scale-100 group-hover:scale-110 transition-transform duration-[1.2s] ease-out"
-        style={{ backgroundImage: `url(${service.image})` }}
+        className="absolute inset-0 bg-cover bg-center transition-transform duration-[1.2s] ease-out"
+        style={{ backgroundImage: `url(${service.image})`, transform: hovered ? "scale(1.1)" : "scale(1)" }}
       />
 
       {/* Base gradient so the title is always legible */}
@@ -136,7 +139,10 @@ function ServiceCard({
       />
 
       {/* Title — always visible at the bottom */}
-      <div className="absolute inset-x-0 bottom-0 p-7 z-10 transition-transform duration-500 group-hover:-translate-y-2">
+      <div
+        className="absolute inset-x-0 bottom-0 p-7 z-10"
+        style={{ transform: hovered ? "translateY(-8px)" : "translateY(0)", transition: "transform 0.5s ease" }}
+      >
         <h3
           style={{
             fontFamily: "var(--font-display)",
@@ -150,15 +156,17 @@ function ServiceCard({
           {service.title}
         </h3>
         <div
-          className="mt-3 h-0.5 w-10 group-hover:w-16 transition-all duration-500"
-          style={{ backgroundColor: "#B71C1C" }}
+          style={{ marginTop: 12, height: 2, width: hovered ? 64 : 40, backgroundColor: "#B71C1C", transition: "width 0.5s ease" }}
         />
       </div>
 
       {/* Glass info panel — revealed on hover */}
       <div
-        className="absolute inset-0 z-20 flex flex-col justify-center px-7 opacity-0 translate-y-6 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500"
+        className="absolute inset-0 z-20 flex flex-col justify-center px-7"
         style={{
+          opacity: hovered ? 1 : 0,
+          transform: hovered ? "translateY(0)" : "translateY(24px)",
+          transition: "opacity 0.45s ease, transform 0.45s ease",
           background: "rgba(20,20,20,0.45)",
           backdropFilter: "blur(14px) saturate(140%)",
           WebkitBackdropFilter: "blur(14px) saturate(140%)",
@@ -244,12 +252,20 @@ function ServiceCard({
 
 export default function Services({ data }: { data?: ServicesContent }) {
   const { ref, visible } = useScrollReveal();
-  const services = defaultServices.map((s, i) => ({
-    ...s,
-    ...(data?.items[i] ? { title: data.items[i].title, description: data.items[i].description, detail: data.items[i].detail, image: data.items[i].image } : {}),
-  }));
+  const services = data
+    ? data.items.map((item, i) => ({
+        ...(defaultServices[i] ?? defaultServices[0]),
+        title: item.title,
+        description: item.description,
+        detail: item.detail,
+        image: item.image,
+      }))
+    : defaultServices;
   const sectionLabel = data?.sectionLabel ?? "Lo Que Hacemos";
-  const heading = data?.heading ?? "Todo lo que necesitas. Una sola agencia.";
+  const heading: string[] = data?.heading?.length
+    ? data.heading
+    : ["Todo lo que necesitas.", "Una sola agencia."];
+  const subheading = data?.subheading ?? "Desde el primer clic hasta la conversión final, ReckTrack MD gestiona cada dimensión de tu presencia digital con calidad sin concesiones.";
 
   return (
     <section id="services" className="py-24" style={{ backgroundColor: "var(--color-bg)" }}>
@@ -291,7 +307,7 @@ export default function Services({ data }: { data?: ServicesContent }) {
               letterSpacing: "-0.02em",
             }}
           >
-            {heading.split('. ').map((part, i, arr) => i === arr.length - 1 ? <span key={i} style={{ color: "#B71C1C" }}>{part}</span> : <span key={i}>{part}. </span>)}
+            {heading.slice(0, -1).join(" ")}{" "}<span style={{ color: "#B71C1C" }}>{heading[heading.length - 1]}</span>
           </h2>
 
           <p
@@ -304,8 +320,7 @@ export default function Services({ data }: { data?: ServicesContent }) {
               lineHeight: 1.75,
             }}
           >
-            Desde el primer clic hasta la conversión final, ReckTrack MD gestiona
-            cada dimensión de tu presencia digital con calidad sin concesiones.
+            {subheading}
           </p>
         </div>
 
@@ -313,7 +328,7 @@ export default function Services({ data }: { data?: ServicesContent }) {
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
           {services.map((service, i) => (
             <ServiceCard
-              key={service.title}
+              key={i}
               service={service}
               index={i}
               visible={visible}

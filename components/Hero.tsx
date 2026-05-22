@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import type { HeroContent } from "@/lib/content";
 
 const defaultHeadline = ["Impulsando", "marcas", "que", "generan", "cambios."];
@@ -107,15 +107,39 @@ const steps = [
   },
 ];
 
+const STAT_ICON_PATHS: Record<string, React.ReactElement> = {
+  users:     <><circle cx="7" cy="6" r="2.5" stroke="currentColor" strokeWidth="1.6"/><path d="M1 17c0-3 2.5-5 6-5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/><circle cx="13" cy="6" r="2.5" stroke="currentColor" strokeWidth="1.6"/><path d="M13 12c3.5 0 6 2 6 5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/></>,
+  calendar:  <><rect x="2" y="4" width="16" height="13" rx="2" stroke="currentColor" strokeWidth="1.6"/><path d="M6 2v4M14 2v4M2 9h16" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/></>,
+  star:      <path d="M10 2l2 4.9 5.4.8-3.9 3.8.9 5.3L10 14.2l-4.8 2.6.9-5.3L2.2 7.7l5.4-.8L10 2z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round"/>,
+  smile:     <><circle cx="10" cy="10" r="8" stroke="currentColor" strokeWidth="1.6"/><path d="M7 12.5s1.2 1.5 3 1.5 3-1.5 3-1.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/><circle cx="7.5" cy="8.5" r="1" fill="currentColor"/><circle cx="12.5" cy="8.5" r="1" fill="currentColor"/></>,
+  chart:     <><rect x="2" y="12" width="4" height="5" rx="1" stroke="currentColor" strokeWidth="1.6"/><rect x="8" y="8" width="4" height="9" rx="1" stroke="currentColor" strokeWidth="1.6"/><rect x="14" y="4" width="4" height="13" rx="1" stroke="currentColor" strokeWidth="1.6"/></>,
+  briefcase: <><rect x="2" y="7" width="16" height="10" rx="2" stroke="currentColor" strokeWidth="1.6"/><path d="M7 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2" stroke="currentColor" strokeWidth="1.6"/><path d="M2 12h16" stroke="currentColor" strokeWidth="1.6"/></>,
+  target:    <><circle cx="10" cy="10" r="8" stroke="currentColor" strokeWidth="1.6"/><circle cx="10" cy="10" r="4" stroke="currentColor" strokeWidth="1.6"/><circle cx="10" cy="10" r="1.5" fill="currentColor"/></>,
+  award:     <><circle cx="10" cy="7" r="5" stroke="currentColor" strokeWidth="1.6"/><path d="M6.5 11.5L5 18l5-3 5 3-1.5-6.5" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round"/></>,
+  rocket:    <path d="M10 2s4 1 5.5 6L12 12H8L4.5 8C6 3 10 2 10 2z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round"/>,
+  globe:     <><circle cx="10" cy="10" r="8" stroke="currentColor" strokeWidth="1.6"/><path d="M2 10h16M10 2a14 14 0 0 1 0 16M10 2a14 14 0 0 0 0 16" stroke="currentColor" strokeWidth="1.6"/></>,
+  heart:     <path d="M10 16s-7-4-7-9a4 4 0 0 1 7-2.5A4 4 0 0 1 17 7c0 5-7 9-7 9z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round"/>,
+  lightning: <path d="M12 2L6 11h5l-3 7 9-10h-5l3-6z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round"/>,
+};
+
+function StatIcon({ iconKey, size = "w-4 h-4" }: { iconKey: string; size?: string }) {
+  return (
+    <svg viewBox="0 0 20 20" fill="none" className={size} aria-hidden="true">
+      {STAT_ICON_PATHS[iconKey] ?? STAT_ICON_PATHS.star}
+    </svg>
+  );
+}
+
 export default function Hero({ data }: { data?: HeroContent }) {
   const headline = data?.headline ?? defaultHeadline;
   const eyebrow = data?.eyebrow ?? "Agencia Digital Integral";
   const ctaPrimary = data?.ctaPrimary ?? "Iniciar Proyecto";
+  const ctaSecondary = data?.ctaSecondary ?? "Ver Nuestro Trabajo";
   const trustStats = data?.trustStats ?? [
-    { value: "50+", label: "Clientes" },
-    { value: "7+",  label: "Años" },
-    { value: "4",   label: "Servicios" },
-    { value: "100%",label: "Satisfacción" },
+    { icon: "users",    value: "50+", label: "Clientes" },
+    { icon: "calendar", value: "7+",  label: "Años" },
+    { icon: "star",     value: "4",   label: "Servicios" },
+    { icon: "smile",    value: "100%",label: "Satisfacción" },
   ];
   const [mounted, setMounted] = useState(false);
   const [active, setActive] = useState(0);
@@ -126,7 +150,7 @@ export default function Hero({ data }: { data?: HeroContent }) {
   useEffect(() => {
     if (paused) return;
     if (active >= steps.length - 1) return; // rest at the destination
-    const id = setTimeout(() => setActive((i) => i + 1), 2200);
+    const id = setTimeout(() => setActive((i) => i + 1), 1000);
     return () => clearTimeout(id);
   }, [paused, active]);
 
@@ -214,7 +238,7 @@ export default function Hero({ data }: { data?: HeroContent }) {
                 <span key={i} className="inline-block mr-[0.2em] last:mr-0"
                   style={mounted ? { animation: "fadeUp 0.6s ease forwards", animationDelay: `${0.2 + i * 0.1}s`, opacity: 0 } : { opacity: 0 }}
                 >
-                  {word === "cambios." ? <span style={{ color: "var(--color-brand-glow)" }}>{word}</span> : word}
+                  {i === headline.length - 1 ? <span style={{ color: "var(--color-brand-glow)" }}>{word}</span> : word}
                 </span>
               ))}
             </h1>
@@ -234,14 +258,11 @@ export default function Hero({ data }: { data?: HeroContent }) {
               className="flex items-center justify-center gap-5 pt-3 border-t w-full"
               style={{ borderColor: "var(--color-border)", opacity: mounted ? 1 : 0, transition: "opacity 0.5s ease 1s" }}
             >
-              {[
-                { icon: <svg viewBox="0 0 20 20" fill="none" className="w-3.5 h-3.5"><circle cx="7" cy="6" r="2.5" stroke="var(--color-brand-glow)" strokeWidth="1.6"/><path d="M1 17c0-3 2.5-5 6-5" stroke="var(--color-brand-glow)" strokeWidth="1.6" strokeLinecap="round"/><circle cx="13" cy="6" r="2.5" stroke="var(--color-brand-glow)" strokeWidth="1.6"/><path d="M13 12c3.5 0 6 2 6 5" stroke="var(--color-brand-glow)" strokeWidth="1.6" strokeLinecap="round"/></svg>, value: trustStats[0]?.value ?? "50+", label: trustStats[0]?.label ?? "Clientes" },
-                { icon: <svg viewBox="0 0 20 20" fill="none" className="w-3.5 h-3.5"><rect x="2" y="4" width="16" height="13" rx="2" stroke="var(--color-brand-glow)" strokeWidth="1.6"/><path d="M6 2v4M14 2v4M2 9h16" stroke="var(--color-brand-glow)" strokeWidth="1.6" strokeLinecap="round"/></svg>, value: trustStats[1]?.value ?? "7+", label: trustStats[1]?.label ?? "Años" },
-                { icon: <svg viewBox="0 0 20 20" fill="none" className="w-3.5 h-3.5"><path d="M10 2l2 4.9 5.4.8-3.9 3.8.9 5.3L10 14.2l-4.8 2.6.9-5.3L2.2 7.7l5.4-.8L10 2z" stroke="var(--color-brand-glow)" strokeWidth="1.6" strokeLinejoin="round"/></svg>, value: trustStats[2]?.value ?? "4", label: trustStats[2]?.label ?? "Servicios" },
-                { icon: <svg viewBox="0 0 20 20" fill="none" className="w-3.5 h-3.5"><circle cx="10" cy="10" r="8" stroke="var(--color-brand-glow)" strokeWidth="1.6"/><path d="M7 12.5s1.2 1.5 3 1.5 3-1.5 3-1.5" stroke="var(--color-brand-glow)" strokeWidth="1.6" strokeLinecap="round"/><circle cx="7.5" cy="8.5" r="1" fill="var(--color-brand-glow)"/><circle cx="12.5" cy="8.5" r="1" fill="var(--color-brand-glow)"/></svg>, value: trustStats[3]?.value ?? "100%", label: trustStats[3]?.label ?? "Satisfacción" },
-              ].map((s) => (
-                <div key={s.label} className="flex items-center gap-1">
-                  <div className="flex-shrink-0">{s.icon}</div>
+              {trustStats.map((s, idx) => (
+                <div key={idx} className="flex items-center gap-1">
+                  <div className="flex-shrink-0" style={{ color: "var(--color-brand-glow)" }}>
+                    <StatIcon iconKey={s.icon ?? "star"} size="w-3.5 h-3.5" />
+                  </div>
                   <div>
                     <div style={{ fontFamily: "var(--font-display)", fontWeight: 800, fontSize: "0.9rem", color: "var(--color-text)", lineHeight: 1 }}>{s.value}</div>
                     <div style={{ fontFamily: "var(--font-body)", fontWeight: 500, color: "var(--color-dim)", letterSpacing: "0.08em", fontSize: "0.55rem", textTransform: "uppercase" }}>{s.label}</div>
@@ -323,7 +344,8 @@ export default function Hero({ data }: { data?: HeroContent }) {
                 </p>
                 {isFinal && (
                   <button onClick={() => handleScrollTo("contact")} className="group pointer-events-auto inline-flex items-center gap-1.5 mt-3 px-4 py-2 rounded-full"
-                    style={{ fontFamily: "var(--font-display)", fontSize: "0.75rem", fontWeight: 700, color: "#fff", background: "linear-gradient(135deg, #B71C1C 0%, #7F0000 100%)", boxShadow: "0 8px 22px rgba(183,28,28,0.5)", animation: "stepIn 0.55s cubic-bezier(0.22,1,0.36,1) 0.3s both, ctaPulse 1.7s ease-in-out 1s infinite" }}>
+                    style={{ position: "relative", overflow: "hidden", fontFamily: "var(--font-display)", fontSize: "0.75rem", fontWeight: 700, color: "#fff", background: "linear-gradient(135deg, #B71C1C 0%, #7F0000 100%)", boxShadow: "0 8px 22px rgba(183,28,28,0.5)", animation: "stepIn 0.55s cubic-bezier(0.22,1,0.36,1) 0.3s both, ctaPulse 1.7s ease-in-out 1s infinite" }}>
+                    <span aria-hidden="true" style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.45) 50%, transparent 70%)", animation: "btnShimmer 2.2s ease-in-out 1.4s infinite", borderRadius: "inherit" }} />
                     Empezar mi proyecto
                     <svg viewBox="0 0 16 16" fill="none" className="w-3.5 h-3.5"><path d="M3 8h10M9 4l4 4-4 4" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
                   </button>
@@ -397,7 +419,7 @@ export default function Hero({ data }: { data?: HeroContent }) {
                       : { opacity: 0 }
                   }
                 >
-                  {word === "cambios." ? (
+                  {i === headline.length - 1 ? (
                     <span style={{ color: "var(--color-brand-glow)" }}>{word}</span>
                   ) : word}
                 </span>
@@ -460,7 +482,7 @@ export default function Hero({ data }: { data?: HeroContent }) {
                   backgroundColor: "var(--color-faint)",
                 }}
               >
-                Ver Nuestro Trabajo
+                {ctaSecondary}
               </button>
             </div>
 
@@ -473,26 +495,11 @@ export default function Hero({ data }: { data?: HeroContent }) {
                 transition: "opacity 0.6s ease 1.2s",
               }}
             >
-              {[
-                {
-                  icon: <svg viewBox="0 0 20 20" fill="none" className="w-4 h-4"><circle cx="7" cy="6" r="2.5" stroke="var(--color-brand-glow)" strokeWidth="1.6"/><path d="M1 17c0-3 2.5-5 6-5" stroke="var(--color-brand-glow)" strokeWidth="1.6" strokeLinecap="round"/><circle cx="13" cy="6" r="2.5" stroke="var(--color-brand-glow)" strokeWidth="1.6"/><path d="M13 12c3.5 0 6 2 6 5" stroke="var(--color-brand-glow)" strokeWidth="1.6" strokeLinecap="round"/></svg>,
-                  value: trustStats[0]?.value ?? "50+", label: trustStats[0]?.label ?? "Clientes"
-                },
-                {
-                  icon: <svg viewBox="0 0 20 20" fill="none" className="w-4 h-4"><rect x="2" y="4" width="16" height="13" rx="2" stroke="var(--color-brand-glow)" strokeWidth="1.6"/><path d="M6 2v4M14 2v4M2 9h16" stroke="var(--color-brand-glow)" strokeWidth="1.6" strokeLinecap="round"/></svg>,
-                  value: trustStats[1]?.value ?? "7+", label: trustStats[1]?.label ?? "Años"
-                },
-                {
-                  icon: <svg viewBox="0 0 20 20" fill="none" className="w-4 h-4"><path d="M10 2l2 4.9 5.4.8-3.9 3.8.9 5.3L10 14.2l-4.8 2.6.9-5.3L2.2 7.7l5.4-.8L10 2z" stroke="var(--color-brand-glow)" strokeWidth="1.6" strokeLinejoin="round"/></svg>,
-                  value: trustStats[2]?.value ?? "4", label: trustStats[2]?.label ?? "Servicios"
-                },
-                {
-                  icon: <svg viewBox="0 0 20 20" fill="none" className="w-4 h-4"><circle cx="10" cy="10" r="8" stroke="var(--color-brand-glow)" strokeWidth="1.6"/><path d="M7 12.5s1.2 1.5 3 1.5 3-1.5 3-1.5" stroke="var(--color-brand-glow)" strokeWidth="1.6" strokeLinecap="round"/><circle cx="7.5" cy="8.5" r="1" fill="var(--color-brand-glow)"/><circle cx="12.5" cy="8.5" r="1" fill="var(--color-brand-glow)"/></svg>,
-                  value: trustStats[3]?.value ?? "100%", label: trustStats[3]?.label ?? "Satisfacción"
-                },
-              ].map((s) => (
-                <div key={s.label} className="flex items-center gap-1.5 lg:gap-2">
-                  <div className="flex-shrink-0">{s.icon}</div>
+              {trustStats.map((s, idx) => (
+                <div key={idx} className="flex items-center gap-1.5 lg:gap-2">
+                  <div className="flex-shrink-0" style={{ color: "var(--color-brand-glow)" }}>
+                    <StatIcon iconKey={s.icon ?? "star"} size="w-4 h-4" />
+                  </div>
                   <div>
                     <div className="font-display leading-none" style={{ fontFamily: "var(--font-display)", fontWeight: 800, fontSize: "clamp(0.85rem, 3.8vw, 1.7rem)", color: "var(--color-text)" }}>{s.value}</div>
                     <div className="font-body uppercase tracking-widest mt-0.5" style={{ fontFamily: "var(--font-body)", fontWeight: 500, color: "var(--color-dim)", letterSpacing: "0.08em", fontSize: "0.55rem" }}>{s.label}</div>
@@ -697,6 +704,8 @@ export default function Hero({ data }: { data?: HeroContent }) {
                     onClick={() => handleScrollTo("contact")}
                     className="group pointer-events-auto inline-flex items-center gap-2 mt-5 px-6 py-3 rounded-full transition-[filter] duration-200 hover:brightness-110 active:brightness-90"
                     style={{
+                      position: "relative",
+                      overflow: "hidden",
                       fontFamily: "var(--font-display)",
                       fontSize: "0.85rem",
                       fontWeight: 700,
@@ -707,6 +716,7 @@ export default function Hero({ data }: { data?: HeroContent }) {
                         "stepIn 0.55s cubic-bezier(0.22,1,0.36,1) 0.3s both, ctaPulse 1.7s ease-in-out 1s infinite",
                     }}
                   >
+                    <span aria-hidden="true" style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.45) 50%, transparent 70%)", animation: "btnShimmer 2.2s ease-in-out 1.4s infinite", borderRadius: "inherit" }} />
                     Empezar mi proyecto
                     <svg viewBox="0 0 16 16" fill="none" className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5" aria-hidden="true">
                       <path d="M3 8h10M9 4l4 4-4 4" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />

@@ -31,7 +31,7 @@ function uint8ToHex(buf: ArrayBuffer): string {
     .join("");
 }
 
-function hexToUint8(hex: string): Uint8Array {
+function hexToUint8(hex: string): Uint8Array<ArrayBuffer> {
   const arr = new Uint8Array(hex.length / 2);
   for (let i = 0; i < arr.length; i++) arr[i] = parseInt(hex.slice(i * 2, i * 2 + 2), 16);
   return arr;

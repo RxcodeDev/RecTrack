@@ -1,0 +1,36 @@
+# Dependencias y artefactos de build (se regeneran dentro de la imagen)
+node_modules
+.next
+out
+build
+
+# Git
+.git
+.gitignore
+
+# Entorno y secretos — se inyectan en runtime vía env_file, NUNCA en la imagen
+.env*
+
+# Datos generados en runtime (no semilla)
+data/submissions.json
+
+# Caché de TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Documentación y meta
+README.md
+AGENTS.md
+CLAUDE.md
+CONTEXT.MD
+
+# Misc
+.DS_Store
+npm-debug.log*
+.vscode
+.idea

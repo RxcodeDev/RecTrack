@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { readContent, patchSection, SiteContent } from "@/lib/content";
 import { corsHeaders, handlePreflight } from "@/lib/cors";
 
@@ -34,6 +35,9 @@ export async function PUT(req: NextRequest, { params }: Params) {
       return NextResponse.json({ error: `Sección '${section}' no existe.` }, { status: 404, headers: cors });
     }
     await patchSection(key, body);
+    // 'meta' afecta al layout (SEO); el resto a la page. Revalidar el layout
+    // cubre ambos casos.
+    revalidatePath("/", "layout");
     return NextResponse.json({ ok: true }, { headers: cors });
   } catch {
     return NextResponse.json({ error: "No se pudo guardar la sección." }, { status: 500, headers: cors });

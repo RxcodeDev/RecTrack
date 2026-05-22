@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { promises as fs } from "fs";
 import path from "path";
 import { corsHeaders, handlePreflight } from "@/lib/cors";
@@ -32,6 +33,8 @@ export async function PUT(req: NextRequest) {
   try {
     const body = await req.json();
     await writeColors(body);
+    // layout.tsx inyecta la paleta como CSS vars: revalidar el layout.
+    revalidatePath("/", "layout");
     return NextResponse.json({ ok: true }, { headers: cors });
   } catch {
     return NextResponse.json({ error: "No se pudo guardar los colores." }, { status: 500, headers: cors });

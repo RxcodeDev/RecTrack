@@ -34,8 +34,9 @@ export async function PATCH(req: NextRequest) {
   try {
     const { section, data } = await req.json() as { section: keyof SiteContent; data: unknown };
     const content = await readContent();
-    (content as Record<string, unknown>)[section] = {
-      ...(content as Record<string, unknown>)[section] as object,
+    const record = content as unknown as Record<string, unknown>;
+    record[section] = {
+      ...(record[section] as object),
       ...(data as object),
     };
     await writeContent(content);

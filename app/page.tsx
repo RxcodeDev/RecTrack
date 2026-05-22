@@ -7,6 +7,7 @@ import Portfolio from "@/components/Portfolio";
 import Testimonials from "@/components/Testimonials";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
+import FloatingButtons from "@/components/FloatingButtons";
 import { readContent, readLogos } from "@/lib/content";
 
 export default async function Home() {
@@ -25,6 +26,7 @@ export default async function Home() {
       <Testimonials data={content.testimonials} />
       <Contact   data={content.contact} />
       <Footer    data={content.footer} logoUrl={logoUrl} />
+      <FloatingButtons navbar={content.navbar} contact={content.contact} />
     </main>
   );
 }

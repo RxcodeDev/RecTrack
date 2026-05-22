@@ -421,7 +421,11 @@ function ReviewCard({ review }: { review: GoogleReview }) {
 /* ───────────────── Sección ───────────────── */
 export default function Testimonials({ data }: { data?: TestimonialsContent }) {
   const { ref, visible } = useScrollReveal();
-  const videos = data?.videos ?? defaultVideoTestimonials;
+  // Descarta entradas incompletas (p. ej. filas en blanco creadas en el panel):
+  // un video sin `src` rompería el <iframe>/<video>.
+  const videos = (data?.videos ?? defaultVideoTestimonials).filter(
+    (v) => v.src.trim() !== ""
+  );
   const reviews = data?.googleReviews ?? defaultGoogleReviews;
   const summary = data?.googleSummary ?? defaultGoogleSummary;
   const mapsUrl = data?.googleMapsUrl ?? DEFAULT_GOOGLE_MAPS_URL;
@@ -570,7 +574,7 @@ export default function Testimonials({ data }: { data?: TestimonialsContent }) {
         </div>
 
         {/* Carrusel de videos verticales */}
-        <VideoCarousel videos={videos} />
+        {videos.length > 0 && <VideoCarousel videos={videos} />}
       </div>
     </section>
   );

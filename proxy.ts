@@ -7,7 +7,7 @@ export default async function proxy(req: NextRequest) {
 
   if (req.method === "OPTIONS") return NextResponse.next();
 
-  if (pathname.startsWith("/api/admin/") && pathname !== "/api/admin/auth") {
+  if (pathname.startsWith("/api/rxpanel/") && pathname !== "/api/rxpanel/auth") {
     if (!await isAuthenticatedRequest(req)) {
       return NextResponse.json({ error: "No autorizado." }, { status: 401 });
     }
@@ -26,5 +26,5 @@ export default async function proxy(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/api/admin/:path*"],
+  matcher: ["/admin/:path*", "/api/rxpanel/:path*"],
 };

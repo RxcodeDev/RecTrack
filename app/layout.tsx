@@ -117,7 +117,7 @@ export default async function RootLayout({
       className={`${plusJakarta.variable} ${outfit.variable} ${spaceMono.variable} scroll-smooth`}
     >
       {cssOverrides && (
-        <style>{`:root{${cssOverrides}}`}</style>
+        <style precedence="default" href="site-color-overrides">{`:root{${cssOverrides}}`}</style>
       )}
       <body className="min-h-screen bg-white text-brand-text antialiased font-body">
         {children}

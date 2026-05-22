@@ -59,6 +59,19 @@ function PhotoTile({
   );
 }
 
+function getYouTubeId(src: string): string | null {
+  if (!src) return null;
+  const patterns = [
+    /(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/,
+    /^([a-zA-Z0-9_-]{11})$/,
+  ];
+  for (const p of patterns) {
+    const m = src.match(p);
+    if (m) return m[1];
+  }
+  return null;
+}
+
 function VideoTile({
   src, poster, client, category, desc, duration, delay = 0, visible,
   orientation = "horizontal", featured = false, tagline, stretch = false,
@@ -67,17 +80,13 @@ function VideoTile({
   duration: string; delay?: number; visible: boolean;
   orientation?: "horizontal" | "vertical"; featured?: boolean; tagline?: string; stretch?: boolean;
 }) {
-  const videoRef = useRef<HTMLVideoElement>(null);
   const [playing, setPlaying] = useState(false);
   const isVertical = orientation === "vertical";
   const tileH = stretch ? "100%" : isVertical ? 340 : featured ? 390 : 220;
+  const youtubeId = getYouTubeId(src);
+  const posterSrc = poster || (youtubeId ? `https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg` : "");
 
-  const toggle = () => {
-    const v = videoRef.current;
-    if (!v) return;
-    if (playing) { v.pause(); setPlaying(false); }
-    else { v.play(); setPlaying(true); }
-  };
+  const toggle = () => setPlaying(p => !p);
 
   return (
     <div
@@ -91,17 +100,38 @@ function VideoTile({
       }}
       onClick={toggle}
     >
-      {/* Real video element */}
-      <video
-        ref={videoRef}
-        src={src}
-        poster={poster}
-        muted
-        playsInline
-        loop
-        preload="none"
-        className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-      />
+      {/* Poster image — always shown when not playing */}
+      {posterSrc && !playing && (
+        <img
+          src={posterSrc}
+          alt={`${client} — ${category}`}
+          className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+        />
+      )}
+
+      {/* Media — only mounted on play click to avoid preload errors */}
+      {playing && (
+        youtubeId ? (
+          <iframe
+            className="absolute inset-0 w-full h-full"
+            src={`https://www.youtube-nocookie.com/embed/${youtubeId}?autoplay=1&mute=1&loop=1&playlist=${youtubeId}&modestbranding=1&rel=0`}
+            allow="autoplay; encrypted-media"
+            allowFullScreen
+            style={{ border: 0 }}
+          />
+        ) : src ? (
+          // eslint-disable-next-line jsx-a11y/media-has-caption
+          <video
+            autoPlay
+            muted
+            playsInline
+            loop
+            className="absolute inset-0 w-full h-full object-cover"
+          >
+            <source src={src} />
+          </video>
+        ) : null
+      )}
 
       {/* Overlay — featured uses full-coverage gradient */}
       {featured
@@ -150,7 +180,8 @@ function VideoTile({
         </div>
       )}
 
-      {/* Center play/pause */}
+      {/* Center play/pause — hidden when YouTube iframe is active */}
+      {!(youtubeId && playing) && (
       <div className="absolute inset-0 z-10 flex items-center justify-center">
         <div
           className="flex items-center justify-center rounded-full transition-all duration-200 group-hover:scale-110"
@@ -166,6 +197,7 @@ function VideoTile({
           }
         </div>
       </div>
+      )}
 
       {/* Progress bar */}
       <div className="absolute inset-x-0 bottom-0 h-[3px]" style={{ backgroundColor: "rgba(255,255,255,0.1)" }}>
@@ -186,6 +218,14 @@ export default function Portfolio({ data }: { data?: PortfolioContent }) {
   const { ref: ref2, visible: visible2 } = useScrollReveal();
   const sectionLabel = data?.sectionLabel ?? "Trabajo Selecto";
   const ctaLabel = data?.ctaLabel ?? "Ver Portafolio Completo";
+  const photos = data?.photos ?? [];
+  const videos = data?.videos ?? [];
+  const rawHeading = data?.heading;
+  const heading: string[] = Array.isArray(rawHeading) && rawHeading.length
+    ? rawHeading
+    : typeof rawHeading === "string" && rawHeading
+    ? [rawHeading]
+    : ["Trabajo que", "se gana la atención."];
 
   return (
     <section id="portfolio" className="py-24" style={{ backgroundColor: "var(--color-bg)" }}>
@@ -202,7 +242,7 @@ export default function Portfolio({ data }: { data?: PortfolioContent }) {
               </span>
             </div>
             <h2 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(2rem, 4vw, 3rem)", fontWeight: 800, color: "var(--color-text)", lineHeight: 1.1, letterSpacing: "-0.02em" }}>
-              Trabajo que <span style={{ color: "var(--color-brand-primary)" }}>se gana la atención.</span>
+              {heading.slice(0, -1).join(" ")}{heading.length > 1 && heading[0] ? " " : ""}<span style={{ color: "var(--color-brand-primary)" }}>{heading[heading.length - 1]}</span>
             </h2>
           </div>
           <p style={{ fontFamily: "var(--font-body)", fontSize: "0.95rem", color: "var(--color-muted)", lineHeight: 1.7, maxWidth: "22rem" }}>
@@ -211,136 +251,153 @@ export default function Portfolio({ data }: { data?: PortfolioContent }) {
         </div>
 
         {/* ── FOTO GRID — editorial layout ──────────────────── */}
+        {photos.length > 0 && (
         <div className="grid grid-cols-1 md:grid-cols-12 gap-4 mb-4" style={{ gridAutoRows: "280px" }}>
           {/* Featured tall — left */}
+          {photos[0] && (
           <div className="md:col-span-5 row-span-2" style={{
             opacity: visible ? 1 : 0, transform: visible ? "translateY(0)" : "translateY(24px)",
             transition: "opacity 0.6s ease 0.05s, transform 0.6s ease 0.05s",
           }}>
             <PhotoTile
-              img="https://images.unsplash.com/photo-1561214115-f2f134cc4912?w=1200&q=80"
-              client="IDAM Arte" category="Identidad de Marca"
-              desc="Branding integral para galería de arte contemporáneo."
-              visible={visible} tall={true}
+              img={photos[0].img} client={photos[0].client} category={photos[0].category}
+              desc={photos[0].desc} visible={visible} tall={true}
             />
           </div>
+          )}
           {/* Top right */}
+          {photos[1] && (
           <div className="md:col-span-4" style={{
             opacity: visible ? 1 : 0, transform: visible ? "translateY(0)" : "translateY(24px)",
             transition: "opacity 0.6s ease 0.12s, transform 0.6s ease 0.12s",
           }}>
             <PhotoTile
-              img="https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?w=800&q=80"
-              client="Makeup Artist Glory" category="Serie Fotográfica"
-              desc="Look-book para artista de maquillaje profesional."
-              visible={visible}
+              img={photos[1].img} client={photos[1].client} category={photos[1].category}
+              desc={photos[1].desc} visible={visible}
             />
           </div>
+          )}
           {/* Top far right */}
+          {photos[2] && (
           <div className="md:col-span-3" style={{
             opacity: visible ? 1 : 0, transform: visible ? "translateY(0)" : "translateY(24px)",
             transition: "opacity 0.6s ease 0.18s, transform 0.6s ease 0.18s",
           }}>
             <PhotoTile
-              img="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=800&q=80"
-              client="SH Curly Store" category="Fotografía de Producto"
-              desc="E-commerce y redes."
-              visible={visible}
+              img={photos[2].img} client={photos[2].client} category={photos[2].category}
+              desc={photos[2].desc} visible={visible}
             />
           </div>
+          )}
           {/* Bottom middle */}
+          {photos[3] && (
           <div className="md:col-span-4" style={{
             opacity: visible ? 1 : 0, transform: visible ? "translateY(0)" : "translateY(24px)",
             transition: "opacity 0.6s ease 0.24s, transform 0.6s ease 0.24s",
           }}>
             <PhotoTile
-              img="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&q=80"
-              client="TeraFitness" category="Campaña Digital"
-              desc="Estrategia y campañas para fisioterapia."
-              visible={visible}
+              img={photos[3].img} client={photos[3].client} category={photos[3].category}
+              desc={photos[3].desc} visible={visible}
             />
           </div>
+          )}
           {/* Bottom far right */}
+          {photos[4] && (
           <div className="md:col-span-3" style={{
             opacity: visible ? 1 : 0, transform: visible ? "translateY(0)" : "translateY(24px)",
             transition: "opacity 0.6s ease 0.3s, transform 0.6s ease 0.3s",
           }}>
             <PhotoTile
-              img="https://images.unsplash.com/photo-1606811971618-4486d14f3f99?w=800&q=80"
-              client="Dental White" category="Desarrollo Web"
-              desc="Sitio web clínica dental."
-              visible={visible}
+              img={photos[4].img} client={photos[4].client} category={photos[4].category}
+              desc={photos[4].desc} visible={visible}
             />
           </div>
+          )}
         </div>
+        )}
 
         {/* ── VIDEO SECTION ─────────────────────────────────── */}
-        <div ref={ref2} className="mt-10 mb-4">
-          {/* Section label */}
-          <div className="flex items-center gap-3 mb-5"
-            style={{ opacity: visible2 ? 1 : 0, transition: "opacity 0.6s ease" }}>
-            <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: "#EF5350", boxShadow: "0 0 6px #EF5350" }} />
-            <span style={{ fontFamily: "var(--font-body)", fontWeight: 600, fontSize: "0.7rem", color: "var(--color-brand-primary)", letterSpacing: "0.15em", textTransform: "uppercase" }}>
-              Producción Audiovisual
-            </span>
-            <div className="flex-1 h-px" style={{ backgroundColor: "var(--color-border)" }} />
-          </div>
-
-          {/* Row 1: 1 wide horizontal (7 cols) + 3 vertical reels (5 cols) */}
-          <div className="grid grid-cols-12 gap-3 mb-3" style={{ alignItems: "stretch" }}>
-            <div className="col-span-12 md:col-span-7"
-              style={{ opacity: visible2 ? 1 : 0, transform: visible2 ? "none" : "translateY(20px)", transition: "opacity 0.5s ease 0.05s, transform 0.5s ease 0.05s" }}>
-              <VideoTile
-                src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"
-                poster="https://images.unsplash.com/photo-1574717024453-354056afd6fc?w=800&q=80"
-                client="Bolis Purileo" category="Spot Publicitario"
-                desc="Campaña audiovisual para lanzamiento de producto." duration="2:34"
-                visible={visible2} orientation="horizontal" featured
-                tagline="Contenido que conecta marcas con personas reales."
-              />
+        <div ref={ref2}>
+        {videos.length > 0 && (() => {
+          const hVideos = videos.filter(v => (v.orientation ?? "horizontal") === "horizontal");
+          const vVideos = videos.filter(v => v.orientation === "vertical");
+          return (
+          <div className="mt-10 mb-4">
+            {/* Section label */}
+            <div className="flex items-center gap-3 mb-6"
+              style={{ opacity: visible2 ? 1 : 0, transition: "opacity 0.6s ease" }}>
+              <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: "#EF5350", boxShadow: "0 0 6px #EF5350" }} />
+              <span style={{ fontFamily: "var(--font-body)", fontWeight: 600, fontSize: "0.7rem", color: "var(--color-brand-primary)", letterSpacing: "0.15em", textTransform: "uppercase" }}>
+                Producción Audiovisual
+              </span>
+              <div className="flex-1 h-px" style={{ backgroundColor: "var(--color-border)" }} />
             </div>
-            <div className="col-span-12 md:col-span-5 grid grid-cols-3 gap-3" style={{ alignItems: "stretch" }}>
-              {[
-                { src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4", poster: "https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?w=400&q=80", client: "Makeup Artist Glory", category: "Reel", desc: "Transformación para Instagram.", duration: "0:28", delay: 0.1, tagline: "El antes y después que enamora." },
-                { src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4", poster: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=400&q=80", client: "ALUI Holística", category: "Story", desc: "Contenido vertical de marca.", duration: "0:45", delay: 0.16, tagline: "Bienestar en cada frame." },
-                { src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4", poster: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&q=80", client: "TeraFitness", category: "Reel", desc: "Tips de fisioterapia.", duration: "0:52", delay: 0.22, tagline: "Mueve tu marca con propósito." },
-              ].map((v) => (
-                <div key={v.client} className="h-full" style={{ opacity: visible2 ? 1 : 0, transform: visible2 ? "none" : "translateY(20px)", transition: `opacity 0.5s ease ${v.delay}s, transform 0.5s ease ${v.delay}s` }}>
-                  <VideoTile src={v.src} poster={v.poster} client={v.client} category={v.category}
-                    desc={v.desc} duration={v.duration} visible={visible2} orientation="vertical"
-                    featured tagline={v.tagline} stretch />
-                </div>
-              ))}
-            </div>
-          </div>
 
-          {/* Row 2: 3 horizontal videos — featured */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            {[
-              { src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4", poster: "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=700&q=80", client: "Dr. René Dentista", category: "Video Institucional", desc: "Presentación corporativa para clínica dental.", duration: "1:48", delay: 0.12, tagline: "Tu clínica, vista por miles de pacientes nuevos." },
-              { src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4", poster: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=700&q=80", client: "TeraFitness", category: "Testimonial", desc: "Testimoniales en video de pacientes.", duration: "3:12", delay: 0.18, tagline: "Resultados reales que inspiran confianza." },
-              { src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4", poster: "https://images.unsplash.com/photo-1563986768609-322da13575f3?w=700&q=80", client: "SH Curly Store", category: "Review de Producto", desc: "Video review para canal de YouTube.", duration: "4:05", delay: 0.24, tagline: "Productos que brillan frente a cámara." },
-            ].map((v) => (
-              <div key={v.client} style={{ opacity: visible2 ? 1 : 0, transform: visible2 ? "none" : "translateY(20px)", transition: `opacity 0.5s ease ${v.delay}s, transform 0.5s ease ${v.delay}s` }}>
-                <VideoTile src={v.src} poster={v.poster} client={v.client} category={v.category}
-                  desc={v.desc} duration={v.duration} visible={visible2} orientation="horizontal"
-                  featured tagline={v.tagline} />
+            {/* ── Landscape: TV · Web · Cine ── */}
+            {hVideos.length > 0 && (
+            <div className="mb-8">
+              <div className={`grid gap-4 ${hVideos.length === 1 ? "grid-cols-1" : "grid-cols-1 md:grid-cols-2"}`}>
+                {hVideos.map((v, i) => (
+                  <div key={`h-${i}`} className="relative w-full overflow-hidden rounded-2xl"
+                    style={{
+                      aspectRatio: "16/9",
+                      opacity: visible2 ? 1 : 0,
+                      transform: visible2 ? "none" : "translateY(20px)",
+                      transition: `opacity 0.55s ease ${0.15 + i * 0.1}s, transform 0.55s ease ${0.15 + i * 0.1}s`,
+                    }}>
+                    <VideoTile src={v.src} poster={v.poster ?? ""}
+                      client={v.client} category={v.category}
+                      desc={v.desc} duration={v.duration}
+                      visible orientation="horizontal" featured tagline={v.tagline} stretch />
+                  </div>
+                ))}
               </div>
-            ))}
+            </div>
+            )}
+
+            {/* ── Portrait: Reels · Stories · Móvil ── */}
+            {vVideos.length > 0 && (
+            <div>
+              <div className={`grid gap-3 ${
+                vVideos.length === 1 ? "grid-cols-1 max-w-xs" :
+                vVideos.length === 2 ? "grid-cols-2 md:grid-cols-2" :
+                vVideos.length === 3 ? "grid-cols-3" :
+                "grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+              }`}>
+                {vVideos.map((v, i) => (
+                  <div key={`v-${i}`} className="relative w-full overflow-hidden rounded-2xl"
+                    style={{
+                      aspectRatio: "9/16",
+                      opacity: visible2 ? 1 : 0,
+                      transform: visible2 ? "none" : "translateY(20px)",
+                      transition: `opacity 0.55s ease ${0.2 + i * 0.08}s, transform 0.55s ease ${0.2 + i * 0.08}s`,
+                    }}>
+                    <VideoTile src={v.src} poster={v.poster ?? ""}
+                      client={v.client} category={v.category}
+                      desc={v.desc} duration={v.duration}
+                      visible orientation="vertical" featured tagline={v.tagline} stretch />
+                  </div>
+                ))}
+              </div>
+            </div>
+            )}
           </div>
+          );
+        })()}
         </div>
 
         {/* CTA */}
         <div className="mt-12 flex justify-center" style={{ opacity: visible2 ? 1 : 0, transition: "opacity 0.7s ease 0.5s" }}>
-          <button
+          <a
+            href="/portafolio"
             className="inline-flex items-center gap-3 px-8 py-3.5 rounded-xl border transition-all duration-300 hover:-translate-y-0.5"
-            style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: "0.95rem", color: "var(--color-text)", borderColor: "var(--color-border-soft)", backgroundColor: "var(--color-surface)" }}
+            style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: "0.95rem", color: "var(--color-text)", borderColor: "var(--color-border-soft)", backgroundColor: "var(--color-surface)", textDecoration: "none" }}
           >
             {ctaLabel}
             <svg viewBox="0 0 16 16" fill="none" width="16" height="16">
               <path d="M3 8h10M9 4l4 4-4 4" stroke="var(--color-brand-primary)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
-          </button>
+          </a>
         </div>
 
       </div>

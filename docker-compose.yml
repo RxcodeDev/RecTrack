@@ -1,0 +1,43 @@
+# =============================================================================
+# RecTrack — orquestación de producción
+#
+#   docker compose up -d --build     construir y levantar
+#   docker compose logs -f           ver logs
+#   docker compose down              detener
+#
+# Requisito: el archivo .env.local debe existir con ADMIN_PASSWORD y
+# ADMIN_SECRET. Si no existe, créalo desde la plantilla:
+#   cp .env.example .env.local      (ver CONTEXT.MD §12)
+# =============================================================================
+
+services:
+  rectrack:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: rectrack
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    # Carga ADMIN_PASSWORD, ADMIN_SECRET y ADMIN_PANEL_ORIGIN dentro del contenedor.
+    env_file:
+      - .env.local
+    environment:
+      NODE_ENV: production
+      NEXT_TELEMETRY_DISABLED: "1"
+    # Persistencia: el CMS de archivos planos escribe a disco en runtime.
+    # Volúmenes nombrados → se siembran con el contenido de la imagen en su
+    # primera creación y conservan las ediciones del panel tras reiniciar.
+    volumes:
+      - rectrack-data:/app/data            # site-content/colors/logos.json + leads
+      - rectrack-uploads:/app/public/uploads  # imágenes subidas desde el panel
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:3000/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+
+volumes:
+  rectrack-data:
+  rectrack-uploads:

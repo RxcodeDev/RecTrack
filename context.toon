@@ -1,0 +1,139 @@
+# context.toon — RecTrack
+# Contexto estructurado para ingestion por IA (formato TOON, optimizado en tokens).
+# La documentacion en prosa (arquitectura, convenciones, advertencias) esta en CONTEXT.MD.
+
+project:
+  name: RecTrack
+  brand: ReckTrack Marketing Digital
+  purpose: Landing de agencia de marketing digital + API admin (CMS de archivos planos)
+  proseDoc: CONTEXT.MD
+  dockerDoc: DOCKER.md
+
+stack:
+  framework: Next.js 16.2.6
+  router: App Router
+  runtime: Node.js 20+
+  language: TypeScript 5 strict
+  ui: React 19.2
+  styles: Tailwind CSS v4
+  email: nodemailer (declarado, sin uso actual)
+  persistence: Archivos JSON en disco (sin base de datos)
+  tests: ninguno
+
+nextjs16Breaking[3]{change,detail}:
+  middleware renombrado,"El middleware es proxy.ts en la raiz; exporta default proxy(req)"
+  params asincrono,"En rutas dinamicas params es Promise: usar await params"
+  docs locales,"Consultar node_modules/next/dist/docs antes de usar APIs del framework"
+
+architecture:
+  pattern: CMS de archivos planos (el contenido vive en data/*.json, no en el codigo)
+  read: "app/page.tsx y app/layout.tsx leen data/*.json con fs en cada render del servidor"
+  write: "las rutas /api/rxpanel/* reescriben los JSON y llaman revalidatePath('/')"
+  adminPanel: "App externa separada; consume /api/rxpanel/* via token Bearer + CORS"
+  requiresDisk: "data/ y public/uploads/ deben ser persistentes (volumenes en Docker)"
+
+keyFiles[14]{path,role}:
+  app/layout.tsx,"Root layout: fuentes, metadata SEO dinamica, inyecta colores como CSS vars"
+  app/page.tsx,"Landing: lee data/ y monta los 9 componentes de seccion"
+  app/globals.css,"Tailwind v4 + design tokens (variables --color-*)"
+  proxy.ts,"Middleware Next16: protege /admin/* y /api/rxpanel/*"
+  lib/auth.ts,"HMAC: tokens de sesion, cookies, verificacion"
+  lib/content.ts,"Tipos del contenido + read/write/patch de los JSON"
+  lib/cors.ts,"Cabeceras CORS para el panel externo"
+  data/site-content.json,"Contenido textual del landing (10 secciones)"
+  data/site-colors.json,"Paleta de colores (tokens CSS)"
+  data/site-logos.json,"Rutas de logo y favicon"
+  data/submissions.json,"Leads del formulario (generado en runtime, no en git)"
+  next.config.ts,"output standalone + remotePatterns de imagenes"
+  tailwind.config.ts,"Theme: colores brand, animaciones"
+  Dockerfile,"Build multi-stage sobre output standalone"
+
+components[9]{name,contentKey}:
+  Navbar,navbar
+  Hero,hero
+  Clients,clients
+  Services,services
+  Stats,stats
+  Portfolio,portfolio
+  Testimonials,testimonials
+  Contact,contact
+  Footer,footer
+
+apiRoutes[9]{path,methods,auth,purpose}:
+  /api/contact,POST,public,"Guarda leads del formulario en submissions.json"
+  /api/rxpanel/auth,POST|OPTIONS,none,"Login/logout: password -> token HMAC"
+  /api/rxpanel/content,GET|PUT|PATCH|OPTIONS,token|cookie,"Leer/reemplazar/parchear contenido completo"
+  /api/rxpanel/content/[section],GET|PUT|OPTIONS,token|cookie,"Leer/parchear una seccion concreta"
+  /api/rxpanel/colors,GET|PUT|OPTIONS,token|cookie,"Leer/guardar la paleta de colores"
+  /api/rxpanel/colors/defaults,GET|OPTIONS,token|cookie,"Paleta por defecto (solo lectura)"
+  /api/rxpanel/logos,GET|PUT|OPTIONS,token|cookie,"Leer/guardar logo y favicon"
+  /api/rxpanel/leads,GET|OPTIONS,token|cookie,"Listar leads (mas recientes primero)"
+  /api/rxpanel/upload,POST|OPTIONS,token|cookie,"Subir imagen a public/<folder> (max 5MB)"
+
+contentSections[10]{key,description}:
+  meta,"SEO: title, description, keywords, OpenGraph, TwitterCard, robots, canonical"
+  navbar,"Numero y mensaje de WhatsApp"
+  hero,"Eyebrow, headline (array de lineas), subheadline, CTAs, trustStats"
+  clients,"Label + lista de logos de clientes (name, src)"
+  services,"Label, heading + items (title, description, detail, image)"
+  stats,"Label, heading + metricas animadas (target, suffix, label, description)"
+  portfolio,"Heading + photos[] y videos[] del portafolio"
+  testimonials,"Videos testimonio, resumen de Google Reviews y resenas"
+  contact,"Heading, email, phone, location"
+  footer,"Tagline, contacto, redes sociales, enlaces legales"
+
+dataFiles[4]{file,type,inGit}:
+  site-content.json,SiteContent,true
+  site-colors.json,"Record<string,string>",true
+  site-logos.json,SiteLogos,true
+  submissions.json,Lead[],false
+
+auth:
+  mechanism: HMAC-SHA256
+  login: "POST /api/rxpanel/auth con {password}, comparado en tiempo constante"
+  token: "base64url(admin:<timestamp>.<hmac>) firmado con ADMIN_SECRET"
+  delivery: "respuesta body + cookie admin_session (HttpOnly SameSite=None Secure Max-Age=8h)"
+  accepts: "header Authorization Bearer <token> o cookie admin_session"
+  enforcedBy: "proxy.ts protege /api/rxpanel/* (excepto /api/rxpanel/auth) y /admin/*"
+  limitations: "el token no expira solo; usuario unico con password compartida; sin rate limiting real"
+
+cors:
+  configVar: ADMIN_PANEL_ORIGIN
+  default: "* (wildcard) si la variable no se define"
+  note: "con wildcard no se envian credenciales; el panel externo debe usar token Bearer"
+
+envVars[3]{name,required,default,desc}:
+  ADMIN_PASSWORD,true,-,"Password del panel admin"
+  ADMIN_SECRET,true,-,"Clave HMAC para firmar tokens (generar con: openssl rand -hex 32)"
+  ADMIN_PANEL_ORIGIN,false,*,"Origenes CORS permitidos (lista separada por comas)"
+
+commands[5]{cmd,purpose}:
+  npm run dev,"Servidor de desarrollo (localhost:3000)"
+  npm run build,"Build de produccion (genera .next/standalone)"
+  npm run start,"Servir el build de produccion"
+  npm run lint,"ESLint"
+  docker compose up -d --build,"Construir y levantar en Docker"
+
+docker:
+  files: Dockerfile + docker-compose.yml
+  baseImage: node:20-alpine
+  build: multi-stage sobre el output standalone de Next.js
+  port: 3000
+  envFile: .env.local
+  guide: DOCKER.md
+
+dockerVolumes[2]{volume,path,content}:
+  rectrack-data,/app/data,"JSON del CMS + leads"
+  rectrack-uploads,/app/public/uploads,"Imagenes subidas desde el panel"
+
+conventions[10]{rule}:
+  "Leer los docs de Next 16 en node_modules/next/dist/docs antes de usar APIs del framework"
+  "Middleware = proxy.ts en la raiz; no crear middleware.ts"
+  "params es Promise en rutas dinamicas: siempre await params"
+  "Contenido = JSON: actualizar tipo en lib/content.ts + dato en data/ + uso en componente"
+  "Toda ruta /api/rxpanel/* exporta OPTIONS y adjunta corsHeaders(req) en cada respuesta"
+  "La API admin es un contrato con un panel externo: no romper forma de requests/responses"
+  "Datos persistentes nuevos van a data/ o public/ y deben tener volumen en docker-compose.yml"
+  "Sin tests ni CI: verificar los cambios manualmente con npm run dev"
+  "Idioma del proyecto: espanol (UI, errores de API, comentarios)"
+  "Nunca commitear .env.local ni dejar credenciales en el codigo"

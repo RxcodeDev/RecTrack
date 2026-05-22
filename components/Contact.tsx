@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState, FormEvent } from "react";
-import type { ContactContent } from "@/lib/content";
+import type { BudgetTier, ContactContent } from "@/lib/content";
 
 type FormStatus = "idle" | "sending" | "success" | "error";
 
@@ -50,19 +50,22 @@ const mexicanStates = [
   "Zacatecas",
 ];
 
-// Cada rango de presupuesto define los servicios incluidos.
-const budgetTiers: { value: string; label: string; services: string[] }[] = [
+// Rangos de presupuesto por defecto — se usan solo si el panel no envía
+// `contact.budgetTiers`. Cada rango define los servicios incluidos; los que
+// tienen customInput muestran un campo de monto libre al seleccionarlos.
+const defaultBudgetTiers: BudgetTier[] = [
   {
-    value: "starter",
     label: "$5,000 – $15,000 MXN / mes",
     services: [
       "Gestión de redes sociales",
       "Diseño de contenido básico",
       "Reporte mensual de métricas",
     ],
+    customInput: false,
+    customInputLabel: "",
+    customInputPlaceholder: "",
   },
   {
-    value: "growth",
     label: "$15,000 – $30,000 MXN / mes",
     services: [
       "Gestión de redes sociales",
@@ -70,9 +73,11 @@ const budgetTiers: { value: string; label: string; services: string[] }[] = [
       "Fotografía de producto",
       "Reporte quincenal de métricas",
     ],
+    customInput: false,
+    customInputLabel: "",
+    customInputPlaceholder: "",
   },
   {
-    value: "pro",
     label: "$30,000 – $60,000 MXN / mes",
     services: [
       "Estrategia de marketing integral",
@@ -81,9 +86,11 @@ const budgetTiers: { value: string; label: string; services: string[] }[] = [
       "Desarrollo web",
       "Reporte semanal de métricas",
     ],
+    customInput: false,
+    customInputLabel: "",
+    customInputPlaceholder: "",
   },
   {
-    value: "enterprise",
     label: "$60,000+ MXN / mes",
     services: [
       "Servicio integral 360°",
@@ -93,11 +100,16 @@ const budgetTiers: { value: string; label: string; services: string[] }[] = [
       "Campañas multicanal",
       "Ejecutivo de cuenta dedicado",
     ],
+    customInput: false,
+    customInputLabel: "",
+    customInputPlaceholder: "",
   },
   {
-    value: "otro",
     label: "Otro / Aún no lo sé",
     services: [],
+    customInput: true,
+    customInputLabel: "¿Cuánto tienes en mente?",
+    customInputPlaceholder: "Ej. $8,000 MXN / mes o un rango aproximado",
   },
 ];
 
@@ -209,6 +221,8 @@ export default function Contact({ data }: { data?: ContactContent }) {
   const contactEmail = data?.email ?? "contacto@rectrackmarketingdigital.com";
   const contactPhone = data?.phone ?? "+52 (33) 3615-4478";
   const contactLocation = data?.location ?? "Guadalajara, Jalisco, México";
+  // Rangos de presupuesto editables desde el panel; fallback a los de por defecto.
+  const budgetTiers = data?.budgetTiers?.length ? data.budgetTiers : defaultBudgetTiers;
   const liveContactDetails = [
     { ...contactDetails[0], value: contactEmail },
     { ...contactDetails[1], value: contactPhone },
@@ -228,9 +242,17 @@ export default function Contact({ data }: { data?: ContactContent }) {
   const [errors, setErrors] = useState<Partial<FormFields>>({});
   const [focused, setFocused] = useState<string | null>(null);
 
+  // Rango seleccionado — fields.budget guarda el índice del rango como string.
+  const selectedTier =
+    fields.budget !== "" ? budgetTiers[Number(fields.budget)] : undefined;
   // Servicios incluidos derivados del presupuesto seleccionado.
-  const includedServices =
-    budgetTiers.find((t) => t.value === fields.budget)?.services ?? [];
+  const includedServices = selectedTier?.services ?? [];
+  // Los rangos marcados con customInput muestran un campo de monto libre,
+  // con la etiqueta y el placeholder definidos en el propio rango.
+  const askCustomBudget = selectedTier?.customInput === true;
+  const customInputLabel = selectedTier?.customInputLabel || "¿Cuánto tienes en mente?";
+  const customInputPlaceholder =
+    selectedTier?.customInputPlaceholder || "Ej. $8,000 MXN / mes o un rango aproximado";
 
   const validate = (): boolean => {
     const newErrors: Partial<FormFields> = {};
@@ -270,7 +292,11 @@ export default function Contact({ data }: { data?: ContactContent }) {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...fields, services: includedServices }),
+        body: JSON.stringify({
+          ...fields,
+          budget: selectedTier?.label ?? "",
+          services: includedServices,
+        }),
       });
       if (!res.ok) throw new Error("server_error");
       setStatus("success");
@@ -649,8 +675,8 @@ export default function Contact({ data }: { data?: ContactContent }) {
                       style={{ ...inputBase, cursor: "pointer", ...(focused === "budget" ? inputFocusStyle : {}) }}
                     >
                       <option value="">Selecciona un rango…</option>
-                      {budgetTiers.map((t) => (
-                        <option key={t.value} value={t.value}>
+                      {budgetTiers.map((t, i) => (
+                        <option key={i} value={String(i)}>
                           {t.label}
                         </option>
                       ))}
@@ -658,8 +684,8 @@ export default function Contact({ data }: { data?: ContactContent }) {
                   </div>
                 </div>
 
-                {/* Monto personalizado cuando elige "Otro" */}
-                {fields.budget === "otro" && (
+                {/* Monto personalizado para rangos con customInput */}
+                {askCustomBudget && (
                   <div>
                     <label
                       htmlFor="contact-budget-other"
@@ -672,7 +698,7 @@ export default function Contact({ data }: { data?: ContactContent }) {
                         fontSize: "0.7rem",
                       }}
                     >
-                      ¿Cuánto tienes en mente?
+                      {customInputLabel}
                     </label>
                     <input
                       id="contact-budget-other"
@@ -682,7 +708,7 @@ export default function Contact({ data }: { data?: ContactContent }) {
                       onChange={handleChange}
                       onFocus={() => setFocused("budgetOther")}
                       onBlur={() => setFocused(null)}
-                      placeholder="Ej. $8,000 MXN / mes o un rango aproximado"
+                      placeholder={customInputPlaceholder}
                       style={{ ...inputBase, ...(focused === "budgetOther" ? inputFocusStyle : {}) }}
                     />
                   </div>

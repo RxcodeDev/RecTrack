@@ -44,7 +44,7 @@ export interface HeroContent {
   subheadline: string;
   ctaPrimary: string;
   ctaSecondary: string;
-  trustStats: { value: string; label: string }[];
+  trustStats: { icon: string; value: string; label: string }[];
 }
 
 export interface ClientItem {
@@ -64,7 +64,8 @@ export interface ServiceItem {
 }
 export interface ServicesContent {
   sectionLabel: string;
-  heading: string;
+  heading: string[];
+  subheading: string;
   items: ServiceItem[];
 }
 
@@ -73,6 +74,7 @@ export interface StatItem {
   suffix: string;
   label: string;
   description: string;
+  icon?: string;
 }
 export interface StatsContent {
   sectionLabel: string;
@@ -97,10 +99,33 @@ export interface VideoItem {
   tagline: string;
   orientation: "horizontal" | "vertical";
 }
+export interface WebsiteItem {
+  url: string;
+  screenshot: string;
+  client: string;
+  category: string;
+  desc: string;
+}
 export interface PortfolioContent {
   sectionLabel: string;
-  heading: string;
+  heading: string[];
   ctaLabel: string;
+  photos: PhotoItem[];
+  videos: VideoItem[];
+}
+
+export interface PortfolioPageContent {
+  pageTitle: string;
+  pageDescription: string;
+  tabAll: string;
+  tabWeb: string;
+  tabVideo: string;
+  tabPhoto: string;
+  labelWeb: string;
+  labelVideoH: string;
+  labelVideoV: string;
+  labelPhoto: string;
+  websites: WebsiteItem[];
   photos: PhotoItem[];
   videos: VideoItem[];
 }
@@ -130,6 +155,17 @@ export interface TestimonialsContent {
   googleReviews: GoogleReviewItem[];
 }
 
+// Un rango de presupuesto y los servicios que incluye.
+// Si customInput es true, al seleccionar el rango se muestra un campo de monto
+// libre, con su propia etiqueta y placeholder (customInputLabel/Placeholder).
+export interface BudgetTier {
+  label: string;
+  services: string[];
+  customInput: boolean;
+  customInputLabel: string;
+  customInputPlaceholder: string;
+}
+
 export interface ContactContent {
   sectionLabel: string;
   heading: string;
@@ -137,6 +173,9 @@ export interface ContactContent {
   email: string;
   phone: string;
   location: string;
+  // Catálogo maestro de servicios; cada budgetTier elige sus servicios de aquí.
+  serviceCatalog: string[];
+  budgetTiers: BudgetTier[];
 }
 
 export interface FooterContent {
@@ -157,6 +196,7 @@ export interface SiteContent {
   services: ServicesContent;
   stats: StatsContent;
   portfolio: PortfolioContent;
+  portfolioPage: PortfolioPageContent;
   testimonials: TestimonialsContent;
   contact: ContactContent;
   footer: FooterContent;
