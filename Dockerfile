@@ -29,7 +29,8 @@ ENV HOSTNAME=0.0.0.0
 
 # Usuario sin privilegios
 RUN addgroup --system --gid 1001 nodejs \
- && adduser  --system --uid 1001 nextjs
+ && adduser  --system --uid 1001 nextjs \
+ && apk add --no-cache su-exec
 
 # Servidor autónomo de Next.js (server.js + node_modules mínimos)
 COPY --from=builder /app/.next/standalone ./
@@ -40,7 +41,12 @@ COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 # CMS de archivos planos: semilla de los JSON de contenido
 COPY --from=builder --chown=nextjs:nodejs /app/data ./data
 
-USER nextjs
+# Entrypoint: corre como root para corregir permisos de volúmenes montados,
+# luego baja privilegios a nextjs con su-exec.
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
 EXPOSE 3000
 
+ENTRYPOINT ["/entrypoint.sh"]
 CMD ["node", "server.js"]
